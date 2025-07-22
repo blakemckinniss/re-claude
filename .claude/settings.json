@@ -1,0 +1,130 @@
+{
+  "env": {
+    "CLAUDE_FLOW_AUTO_COMMIT": "false",
+    "CLAUDE_FLOW_AUTO_PUSH": "false",
+    "CLAUDE_FLOW_HOOKS_ENABLED": "true",
+    "CLAUDE_FLOW_TELEMETRY_ENABLED": "true",
+    "CLAUDE_FLOW_REMOTE_EXECUTION": "true",
+    "CLAUDE_FLOW_GITHUB_INTEGRATION": "true",
+    "CLAUDE_FLOW_ENFORCE_SWARM": "true",
+    "CLAUDE_FLOW_ENFORCE_PARALLEL": "true",
+    "CLAUDE_FLOW_ENFORCE_MEMORY": "true",
+    "CLAUDE_FLOW_BATCH_TODO_MIN": "5",
+    "CLAUDE_FLOW_MAX_SEQUENTIAL_OPS": "1",
+    "CLAUDE_FLOW_NEURAL_ENABLED": "true",
+    "CLAUDE_FLOW_HIVE_MIND_ENABLED": "true",
+    "CLAUDE_FLOW_WASM_SIMD_ENABLED": "true",
+    "CLAUDE_FLOW_PERFORMANCE_MONITORING": "true",
+    "CLAUDE_FLOW_AUTO_SPAWN_AGENTS": "true",
+    "CLAUDE_FLOW_CROSS_SESSION_MEMORY": "true",
+    "CLAUDE_FLOW_BOTTLENECK_DETECTION": "true"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npx claude-flow@alpha *)",
+      "Bash(npm run lint)",
+      "Bash(npm run test:*)",
+      "Bash(npm test *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push)",
+      "Bash(git config *)",
+      "Bash(gh *)",
+      "Bash(node *)",
+      "Bash(which *)",
+      "Bash(pwd)",
+      "Bash(ls *)",
+      "Bash(black *)",
+      "Bash(prettier *)",
+      "Bash(jq *)",
+      "Bash(mkdir *)",
+      "Bash(touch *)",
+      "Bash(cat *)",
+      "Bash(echo *)"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(curl * | bash)",
+      "Bash(wget * | sh)",
+      "Bash(eval *)",
+      "Bash(sudo *)",
+      "Bash(chmod 777 *)",
+      "Bash(> /dev/sda*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/blake/workspace/re-claude/.claude/hooks/claude_hook_router.py",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/blake/workspace/re-claude/.claude/hooks/claude_hook_router.py",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/blake/workspace/re-claude/.claude/hooks/claude_hook_router.py",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/blake/workspace/re-claude/.claude/hooks/claude_hook_router.py",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/blake/workspace/re-claude/.claude/hooks/claude_hook_router.py",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/blake/workspace/re-claude/.claude/hooks/claude_hook_router.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "includeCoAuthoredBy": true,
+  "enabledMcpjsonServers": ["claude-flow", "ruv-swarm"]
+}

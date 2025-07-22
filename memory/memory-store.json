@@ -1,0 +1,1078 @@
+{
+  "default": [
+    {
+      "key": "conversation_2025-07-22T10-50-03-048286",
+      "value": "{\"timestamp\": \"2025-07-22T10:50:03.048271\", \"prompt\": \"I need you to stop off rogue with assumptions. You're totally wrong, please actually use a command before saying it doesn't exist, npx claude-flow@alpha hooks notification\", \"analysis\": {\"topic_genre\": \"debugging\", \"complexity_score\": 6, \"tech_involved\": [\"npx\", \"claude-flow\", \"hooks\", \"notification\"], \"swarm_agents_recommended\": 2, \"analysis_notes\": \"The user is correcting an assumption and requesting to use a specific command before concluding it doesn't exist. The task involves troubleshooting and potentially setting up notification hooks using claude-flow.\"}, \"conversation_summary\": \"No previous conversation context.\"}",
+      "namespace": "default",
+      "timestamp": 1753195805457
+    },
+    {
+      "key": "conversation_2025-07-22T10-51-18-273637",
+      "value": "{\"timestamp\": \"2025-07-22T10:51:18.273623\", \"prompt\": \"Since you're having issues, please actually read the documentation of the npm module, Claude Flow Hooks (with .swarm/memory.db persistence):\\n\\nPre-Operation Hooks:\\n  pre-task        Execute before starting a task\\n  pre-edit        Validate before file modifications\\n                  --auto-assign-agents  Auto-assign agents based on file type\\n                  --load-context        Load file context\\n  pre-bash        Check command safety (alias: pre-command)\\n  pre-command     Same as pre-bash\\n    \", \"analysis\": {\"topic_genre\": \"general inquiry\", \"complexity_score\": 3, \"tech_involved\": [], \"swarm_agents_recommended\": 1, \"analysis_notes\": \"Analysis response: ```\\n{\\n    \\\"topic_genre\\\": \\\"software development\\\",\\n    \\\"complexity_score\\\": 8,\\n    \\\"tech_involved\\\": [\\\"npm\\\", \\\"Claude Flow Hooks\\\", \\\"JavaScript\\\", \\\"MCP\\\"],\\n    \\\"analysis_notes\\\": \\\"The user prompt provides deta...\"}, \"conversation_summary\": \"No previous conversation context.\"}",
+      "namespace": "default",
+      "timestamp": 1753195880810
+    },
+    {
+      "key": "conversation_2025-07-22T11-03-09-207417",
+      "value": "{\"timestamp\": \"2025-07-22T11:03:09.207403\", \"prompt\": \"explore all possible \\\"npx claude-flow@alpha\\\" commands and put together a reference markdown of all options available to me \", \"analysis\": {\"topic_genre\": \"general inquiry\", \"complexity_score\": 3, \"tech_involved\": [], \"swarm_agents_recommended\": 1, \"analysis_notes\": \"Analysis response: ```\\n{\\n    \\\"topic_genre\\\": \\\"software development\\\",\\n    \\\"complexity_score\\\": 6,\\n    \\\"tech_involved\\\": [\\\"npx\\\", \\\"claude-flow\\\", \\\"markdown\\\"],\\n    \\\"analysis_notes\\\": \\\"The user is looking to explore and document ...\"}, \"conversation_summary\": \"No previous conversation context.\"}",
+      "namespace": "default",
+      "timestamp": 1753196591263
+    },
+    {
+      "key": "latest_summary",
+      "value": "No previous conversation context.",
+      "namespace": "default",
+      "timestamp": 1753196594086
+    },
+    {
+      "key": "read-intent//1753204006",
+      "value": "{\"tool\":\"\",\"target\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204008831
+    },
+    {
+      "key": "read-intent//1753204019",
+      "value": "{\"tool\":\"\",\"target\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204021194
+    },
+    {
+      "key": "read-intent//1753204036",
+      "value": "{\"tool\":\"\",\"target\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204038470
+    },
+    {
+      "key": "read-intent//1753204058",
+      "value": "{\"tool\":\"\",\"target\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204059783
+    },
+    {
+      "key": "todos//batch-1753204102",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753204104974
+    },
+    {
+      "key": "read-intent//1753204127",
+      "value": "{\"tool\":\"\",\"target\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204129323
+    },
+    {
+      "key": "read-intent//1753204142",
+      "value": "{\"tool\":\"\",\"target\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204144837
+    },
+    {
+      "key": "bash//history/1753204156",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753204157977
+    },
+    {
+      "key": "read-intent//1753204172",
+      "value": "{\"tool\":\"\",\"target\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204174826
+    },
+    {
+      "key": "bash//history/1753204188",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753204190156
+    },
+    {
+      "key": "read-intent//1753204207",
+      "value": "{\"tool\":\"\",\"target\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204211312
+    },
+    {
+      "key": "read-intent//1753204226",
+      "value": "{\"tool\":\"\",\"target\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204228840
+    },
+    {
+      "key": "read-intent//1753204238",
+      "value": "{\"tool\":\"\",\"target\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204241623
+    },
+    {
+      "key": "todos//batch-1753204258",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753204261243
+    },
+    {
+      "key": "files//operations/1753204294",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204295292
+    },
+    {
+      "key": "bash//history/1753204318",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753204320107
+    },
+    {
+      "key": "read-intent//1753204341",
+      "value": "{\"tool\":\"\",\"target\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204343691
+    },
+    {
+      "key": "files//operations/1753204363",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204366298
+    },
+    {
+      "key": "todos//batch-1753204390",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753204392152
+    },
+    {
+      "key": "swarm//agents/agent-1-1753204493",
+      "value": "{\"type\":\"\",\"name\":\"\",\"spawned_at\":1753204493}",
+      "namespace": "default",
+      "timestamp": 1753204501679
+    },
+    {
+      "key": "swarm//agents/agent-1-1753204508",
+      "value": "{\"type\":\"\",\"name\":\"\",\"spawned_at\":1753204508}",
+      "namespace": "default",
+      "timestamp": 1753204516612
+    },
+    {
+      "key": "swarm//agents/agent-1-1753204525",
+      "value": "{\"type\":\"\",\"name\":\"\",\"spawned_at\":1753204525}",
+      "namespace": "default",
+      "timestamp": 1753204534145
+    },
+    {
+      "key": "todos//batch-1753204538",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753204544301
+    },
+    {
+      "key": "todos//batch-1753204593",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753204595503
+    },
+    {
+      "key": "todos//batch-1753204648",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753204650273
+    },
+    {
+      "key": "todos//batch-1753204684",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753204686918
+    },
+    {
+      "key": "todos//batch-1753204730",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753204732958
+    },
+    {
+      "key": "files//operations/1753204761",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204763709
+    },
+    {
+      "key": "bash//history/1753204784",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753204786676
+    },
+    {
+      "key": "files//operations/1753204809",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204812509
+    },
+    {
+      "key": "files//operations/1753204839",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204842346
+    },
+    {
+      "key": "files//operations/1753204870",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204872965
+    },
+    {
+      "key": "bash//history/1753204893",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753204895692
+    },
+    {
+      "key": "files//operations/1753204921",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753204925377
+    },
+    {
+      "key": "bash//history/1753204948",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753204951113
+    },
+    {
+      "key": "bash//history/1753204979",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753204980228
+    },
+    {
+      "key": "files//operations/1753205013",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753205016649
+    },
+    {
+      "key": "bash//history/1753205040",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205040393
+    },
+    {
+      "key": "bash//history/1753205065",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205068943
+    },
+    {
+      "key": "todos//batch-1753205086",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753205088744
+    },
+    {
+      "key": "bash//history/1753205100",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205102552
+    },
+    {
+      "key": "bash//history/1753205120",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205122988
+    },
+    {
+      "key": "todos//batch-1753205138",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753205141617
+    },
+    {
+      "key": "notifications//1753205169",
+      "value": "{\"message\":\"\",\"severity\":\"info\",\"timestamp\":1753205169}",
+      "namespace": "default",
+      "timestamp": 1753205171856
+    },
+    {
+      "key": "swarm-initialized-",
+      "value": "true",
+      "namespace": "default",
+      "timestamp": 1753205198537
+    },
+    {
+      "key": "swarm//init-time",
+      "value": "1753205196",
+      "namespace": "default",
+      "timestamp": 1753205200557
+    },
+    {
+      "key": "swarm//parallel-mode",
+      "value": "true",
+      "namespace": "default",
+      "timestamp": 1753205206903
+    },
+    {
+      "key": "swarm//batch-enforcement",
+      "value": "true",
+      "namespace": "default",
+      "timestamp": 1753205209229
+    },
+    {
+      "key": "swarm//agents/agent-1-1753205250",
+      "value": "{\"type\":\"\",\"name\":\"\",\"spawned_at\":1753205250}",
+      "namespace": "default",
+      "timestamp": 1753205257858
+    },
+    {
+      "key": "swarm//agents/agent-1-1753205269",
+      "value": "{\"type\":\"\",\"name\":\"\",\"spawned_at\":1753205269}",
+      "namespace": "default",
+      "timestamp": 1753205278856
+    },
+    {
+      "key": "swarm//agent-count",
+      "value": "1",
+      "namespace": "default",
+      "timestamp": 1753205292184
+    },
+    {
+      "key": "swarm//agents/agent-1-1753205284",
+      "value": "{\"type\":\"\",\"name\":\"\",\"spawned_at\":1753205284}",
+      "namespace": "default",
+      "timestamp": 1753205295615
+    },
+    {
+      "key": "todos//batch-1753205299",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753205305463
+    },
+    {
+      "key": "swarm//types/",
+      "value": "1",
+      "namespace": "default",
+      "timestamp": 1753205305853
+    },
+    {
+      "key": "last-mcp-action",
+      "value": "agent_spawn",
+      "namespace": "default",
+      "timestamp": 1753205318229
+    },
+    {
+      "key": "bash//history/1753205480",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205487636
+    },
+    {
+      "key": "bash//history/1753205483",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205490943
+    },
+    {
+      "key": "bash//history/1753205515",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205524475
+    },
+    {
+      "key": "bash//history/1753205582",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205595172
+    },
+    {
+      "key": "bash//history/1753205693",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205710763
+    },
+    {
+      "key": "bash//history/1753205696",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205711024
+    },
+    {
+      "key": "bash//history/1753205740",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205746069
+    },
+    {
+      "key": "bash//history/1753205744",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205752552
+    },
+    {
+      "key": "bash//history/1753205790",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205796113
+    },
+    {
+      "key": "files//operations/1753205823",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753205829822
+    },
+    {
+      "key": "bash//history/1753205826",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205832483
+    },
+    {
+      "key": "bash//history/1753205841",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205848598
+    },
+    {
+      "key": "bash//history/1753205855",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205862935
+    },
+    {
+      "key": "bash//history/1753205874",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205882619
+    },
+    {
+      "key": "bash//history/1753205891",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205897135
+    },
+    {
+      "key": "files//operations/1753205941",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753205947924
+    },
+    {
+      "key": "swarm//agent-sync/default (86 entries)",
+      "value": "synced",
+      "namespace": "default",
+      "timestamp": 1753205953329
+    },
+    {
+      "key": "swarm//tasks/task--1753205948",
+      "value": "{\"output\":\"\",\"timestamp\":1753205948}",
+      "namespace": "default",
+      "timestamp": 1753205953728
+    },
+    {
+      "key": "files//operations/1753205950",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753205957098
+    },
+    {
+      "key": "swarm//compliance/task--1753205948",
+      "value": "false",
+      "namespace": "default",
+      "timestamp": 1753205979443
+    },
+    {
+      "key": "bash//history/1753205991",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753205996294
+    },
+    {
+      "key": "files//operations/1753206023",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753206030369
+    },
+    {
+      "key": "files//operations/1753206093",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753206097068
+    },
+    {
+      "key": "bash//history/1753206128",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753206131753
+    },
+    {
+      "key": "files//operations/1753206153",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753206157278
+    },
+    {
+      "key": "bash//history/1753206230",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753206233428
+    },
+    {
+      "key": "bash//history/1753206257",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753206262027
+    },
+    {
+      "key": "files//operations/1753206263",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753206270338
+    },
+    {
+      "key": "bash//history/1753206306",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753206311262
+    },
+    {
+      "key": "bash//history/1753206309",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753206311343
+    },
+    {
+      "key": "swarm//agent-sync/default (103 entries)",
+      "value": "synced",
+      "namespace": "default",
+      "timestamp": 1753206350600
+    },
+    {
+      "key": "swarm//tasks/task--1753206352",
+      "value": "{\"output\":\"\",\"timestamp\":1753206352}",
+      "namespace": "default",
+      "timestamp": 1753206356252
+    },
+    {
+      "key": "swarm//compliance/task--1753206352",
+      "value": "false",
+      "namespace": "default",
+      "timestamp": 1753206365250
+    },
+    {
+      "key": "files//operations/1753206442",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753206446752
+    },
+    {
+      "key": "bash//history/1753206475",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753206478186
+    },
+    {
+      "key": "files//operations/1753206600",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753206605038
+    },
+    {
+      "key": "bash//history/1753206636",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753206639151
+    },
+    {
+      "key": "files//operations/1753206697",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753206701859
+    },
+    {
+      "key": "files//operations/1753206774",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753206779069
+    },
+    {
+      "key": "bash//history/1753206813",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753206816504
+    },
+    {
+      "key": "files//operations/1753206877",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753206882778
+    },
+    {
+      "key": "bash//history/1753206916",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753206918498
+    },
+    {
+      "key": "bash//history/1753206941",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753206944214
+    },
+    {
+      "key": "swarm//agent-sync/✅ Available namespaces:",
+      "value": "synced",
+      "namespace": "default",
+      "timestamp": 1753206986927
+    },
+    {
+      "key": "swarm//agent-sync/default (116 entries)",
+      "value": "synced",
+      "namespace": "default",
+      "timestamp": 1753206990487
+    },
+    {
+      "key": "swarm//completed-agents/",
+      "value": "1753206981",
+      "namespace": "default",
+      "timestamp": 1753207000577
+    },
+    {
+      "key": "swarm//tasks/task--1753206998",
+      "value": "{\"output\":\"\",\"timestamp\":1753206998}",
+      "namespace": "default",
+      "timestamp": 1753207002178
+    },
+    {
+      "key": "swarm//task-count",
+      "value": "1",
+      "namespace": "default",
+      "timestamp": 1753207008780
+    },
+    {
+      "key": "swarm//compliance/task--1753206998",
+      "value": "false",
+      "namespace": "default",
+      "timestamp": 1753207011399
+    },
+    {
+      "key": "todos//batch-1753207169",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753207171817
+    },
+    {
+      "key": "todos//batch-1753207262",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753207264886
+    },
+    {
+      "key": "todos//batch-1753207578",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753207583136
+    },
+    {
+      "key": "bash//history/1753207603",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753207606540
+    },
+    {
+      "key": "files//operations/1753207630",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753207636094
+    },
+    {
+      "key": "files//operations/1753207664",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753207670134
+    },
+    {
+      "key": "files//operations/1753207698",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753207703301
+    },
+    {
+      "key": "files//operations/1753207731",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753207737939
+    },
+    {
+      "key": "files//operations/1753207766",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753207769804
+    },
+    {
+      "key": "files//operations/1753208007",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753208013035
+    },
+    {
+      "key": "files//operations/1753208041",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753208046404
+    },
+    {
+      "key": "files//operations/1753208077",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753208082734
+    },
+    {
+      "key": "files//operations/1753208111",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753208118255
+    },
+    {
+      "key": "bash//history/1753208146",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753208148591
+    },
+    {
+      "key": "todos//batch-1753208167",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753208171866
+    },
+    {
+      "key": "memory-ops//count",
+      "value": "1",
+      "namespace": "default",
+      "timestamp": 1753208196471
+    },
+    {
+      "key": "notifications//1753208251",
+      "value": "{\"message\":\"\",\"severity\":\"info\",\"timestamp\":1753208251}",
+      "namespace": "default",
+      "timestamp": 1753208251022
+    },
+    {
+      "key": "files//operations/1753208345",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753208350995
+    },
+    {
+      "key": "files//operations/1753208375",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753208379264
+    },
+    {
+      "key": "files//operations/1753208408",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753208415597
+    },
+    {
+      "key": "files//operations/1753208442",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753208447932
+    },
+    {
+      "key": "files//operations/1753208476",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753208482715
+    },
+    {
+      "key": "files//operations/1753208509",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753208515759
+    },
+    {
+      "key": "files//operations/1753208544",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753208548188
+    },
+    {
+      "key": "files//operations/1753208629",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753208632457
+    },
+    {
+      "key": "files//operations/1753208660",
+      "value": "{\"tool\":\"\",\"file\":\"\",\"extension\":\"\"}",
+      "namespace": "default",
+      "timestamp": 1753208664289
+    },
+    {
+      "key": "bash//history/1753208694",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753208696129
+    },
+    {
+      "key": "notifications//1753208740",
+      "value": "{\"message\":\"\",\"severity\":\"info\",\"timestamp\":1753208740}",
+      "namespace": "default",
+      "timestamp": 1753208742108
+    },
+    {
+      "key": "todos//batch-1753209241",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753209244074
+    },
+    {
+      "key": "read-cache///68b329da9893e34099c7d8ad5cb9c940",
+      "value": "{\"tool\":\"\",\"target\":\"\",\"size\":0,\"timestamp\":1753209271}",
+      "namespace": "default",
+      "timestamp": 1753209274026
+    },
+    {
+      "key": "reads//total",
+      "value": "1",
+      "namespace": "default",
+      "timestamp": 1753209278076
+    },
+    {
+      "key": "sequential-reads",
+      "value": "0",
+      "namespace": "default",
+      "timestamp": 1753209280504
+    },
+    {
+      "key": "todos//batch-1753209299",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753209303126
+    },
+    {
+      "key": "files//operations/1753209374",
+      "value": "{\n  \"file\": \"\",\n  \"size\": 0,\n  \"formatted\": false,\n  \"extension\": \"\",\n  \"timestamp\": 1753209374\n}",
+      "namespace": "default",
+      "timestamp": 1753209377790
+    },
+    {
+      "key": "bash//history/1753209412",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753209414677
+    },
+    {
+      "key": "todos//batch-1753209442",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753209445838
+    },
+    {
+      "key": "files//operations/1753209535",
+      "value": "{\n  \"file\": \"\",\n  \"size\": 0,\n  \"formatted\": false,\n  \"extension\": \"\",\n  \"timestamp\": 1753209535\n}",
+      "namespace": "default",
+      "timestamp": 1753209537419
+    },
+    {
+      "key": "bash//history/1753209580",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753209590637
+    },
+    {
+      "key": "prompt-analysis/",
+      "value": "{\"complexity\":\"low\",\"suggested_agents\":3,\"suggested_topology\":\"star\"}",
+      "namespace": "default",
+      "timestamp": 1753210289691
+    },
+    {
+      "key": "files//operations/1753210378",
+      "value": "{\n  \"file\": \"\",\n  \"size\": 0,\n  \"formatted\": false,\n  \"extension\": \"\",\n  \"timestamp\": 1753210378\n}",
+      "namespace": "default",
+      "timestamp": 1753210382543
+    },
+    {
+      "key": "bash//history/1753210417",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753210421848
+    },
+    {
+      "key": "todos//batch-1753210449",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753210453593
+    },
+    {
+      "key": "files//operations/1753210520",
+      "value": "{\n  \"file\": \"\",\n  \"size\": 0,\n  \"formatted\": false,\n  \"extension\": \"\",\n  \"timestamp\": 1753210520\n}",
+      "namespace": "default",
+      "timestamp": 1753210523808
+    },
+    {
+      "key": "bash//history/1753210557",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753210561628
+    },
+    {
+      "key": "todos//batch-1753210589",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753210593094
+    },
+    {
+      "key": "files//operations/1753210660",
+      "value": "{\n  \"file\": \"\",\n  \"size\": 0,\n  \"formatted\": false,\n  \"extension\": \"\",\n  \"timestamp\": 1753210660\n}",
+      "namespace": "default",
+      "timestamp": 1753210664663
+    },
+    {
+      "key": "bash//history/1753210702",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753210704954
+    },
+    {
+      "key": "todos//batch-1753210733",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753210736261
+    },
+    {
+      "key": "files//operations/1753210807",
+      "value": "{\n  \"file\": \"\",\n  \"size\": 0,\n  \"formatted\": false,\n  \"extension\": \"\",\n  \"timestamp\": 1753210807\n}",
+      "namespace": "default",
+      "timestamp": 1753210812407
+    },
+    {
+      "key": "bash//history/1753210847",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753210852466
+    },
+    {
+      "key": "todos//batch-1753210877",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753210882637
+    },
+    {
+      "key": "files//operations/1753210933",
+      "value": "{\n  \"file\": \"\",\n  \"size\": 0,\n  \"formatted\": false,\n  \"extension\": \"\",\n  \"timestamp\": 1753210933\n}",
+      "namespace": "default",
+      "timestamp": 1753210938022
+    },
+    {
+      "key": "commands//last-time",
+      "value": "1753210956",
+      "namespace": "default",
+      "timestamp": 1753210965958
+    },
+    {
+      "key": "bash//history/1753210974",
+      "value": "{\"command\":\"\",\"category\":\"general\",\"output_length\":0}",
+      "namespace": "default",
+      "timestamp": 1753210978249
+    },
+    {
+      "key": "bash//category/general",
+      "value": "1",
+      "namespace": "default",
+      "timestamp": 1753210986762
+    },
+    {
+      "key": "todos//batch-1753211004",
+      "value": "{\"total\":,\"completed\":,\"in_progress\":,\"pending\":,\"high_priority\":}",
+      "namespace": "default",
+      "timestamp": 1753211006181
+    },
+    {
+      "key": "files//operations/1753211071",
+      "value": "{\n  \"file\": \"\",\n  \"size\": 0,\n  \"formatted\": false,\n  \"extension\": \"\",\n  \"timestamp\": 1753211071\n}",
+      "namespace": "default",
+      "timestamp": 1753211077274
+    },
+    {
+      "key": "file-agent/",
+      "value": "general",
+      "namespace": "default",
+      "timestamp": 1753211078779
+    },
+    {
+      "key": "files//modified/",
+      "value": "1",
+      "namespace": "default",
+      "timestamp": 1753211092849
+    },
+    {
+      "key": "tokens//total",
+      "value": "0",
+      "namespace": "default",
+      "timestamp": 1753211100014
+    },
+    {
+      "key": "sequential-ops-count",
+      "value": "0",
+      "namespace": "default",
+      "timestamp": 1753211104138
+    },
+    {
+      "key": "todos//quality-score",
+      "value": "0",
+      "namespace": "default",
+      "timestamp": 1753211110300
+    },
+    {
+      "key": "notifications//1753211114",
+      "value": "{\"message\":\"\",\"severity\":\"info\",\"timestamp\":1753211114}",
+      "namespace": "default",
+      "timestamp": 1753211117689
+    },
+    {
+      "key": "notifications//count",
+      "value": "1",
+      "namespace": "default",
+      "timestamp": 1753211126416
+    },
+    {
+      "key": "todos//metrics",
+      "value": "{\"count\":,\"high\":,\"medium\":,\"low\":,\"quality\":0}",
+      "namespace": "default",
+      "timestamp": 1753211129150
+    },
+    {
+      "key": "last-tool-used",
+      "value": "TodoWrite",
+      "namespace": "default",
+      "timestamp": 1753211133440
+    },
+    {
+      "key": "todos//total-processed",
+      "value": "0",
+      "namespace": "default",
+      "timestamp": 1753211141974
+    },
+    {
+      "key": "swarm-initialized-test-123",
+      "value": "true",
+      "namespace": "default",
+      "timestamp": 1753211492903
+    },
+    {
+      "key": "swarm/test-123/agent-count",
+      "value": "5",
+      "namespace": "default",
+      "timestamp": 1753211523932
+    },
+    {
+      "key": "tasks/test-123/current",
+      "value": "{\"description\": \"Create a simple REST API with authentication and database integration\", \"complexity\": \"low\", \"suggested_agents\": 3, \"auto_spawned\": true, \"timestamp\": 1753211476}",
+      "namespace": "default",
+      "timestamp": 1753211527070
+    },
+    {
+      "key": "tasks/test-123/complexity",
+      "value": "low",
+      "namespace": "default",
+      "timestamp": 1753211530203
+    }
+  ]
+}
