@@ -3,9 +3,20 @@ Advanced task analysis with claude-flow patterns
 """
 
 import re
+import sys
+import os
 from typing import List, Tuple, Dict, Any, Optional
 from ..models.patterns import TaskPattern, TASK_PATTERNS
 from ..models.analysis import TaskComplexity
+
+# Import MCP tool mappings
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+try:
+    from mcp_tool_mappings import get_required_tools, TASK_PATTERN_TOOLS
+except ImportError:
+    # Fallback if mappings not available
+    get_required_tools = None
+    TASK_PATTERN_TOOLS = {}
 
 
 class TaskAnalyzer:
@@ -174,13 +185,43 @@ class TaskAnalyzer:
     
     def recommend_tools(self, patterns: List[TaskPattern], 
                        complexity: TaskComplexity, 
-                       agent_roles: List[str]) -> List[str]:
-        """Recommend MCP tools based on patterns, complexity, and agents"""
-        tool_set = set()
+                       agent_roles: List[str]) -> Tuple[List[str], List[str]]:
+        """Recommend MCP tools based on patterns, complexity, and agents
         
-        # Collect pattern-suggested tools
-        for pattern in patterns:
-            tool_set.update(pattern.suggested_tools)
+        Returns:
+            Tuple of (recommended_tools, required_tools)
+        """
+        tool_set = set()
+        required_tools = set()
+        
+        # Use comprehensive mappings if available
+        if get_required_tools:
+            # Get required tools from mapping
+            required_list = get_required_tools(patterns, complexity.score, agent_roles)
+            required_tools.update(required_list)
+            
+            # Add pattern-specific recommended tools
+            for pattern in patterns:
+                if pattern.name in TASK_PATTERN_TOOLS:
+                    tool_info = TASK_PATTERN_TOOLS[pattern.name]
+                    required_tools.update(tool_info.get("required", []))
+                    tool_set.update(tool_info.get("recommended", []))
+        else:
+            # Fallback to original logic
+            for pattern in patterns:
+                tool_set.update(pattern.suggested_tools)
+                
+                # Mark certain pattern tools as required
+                if pattern.name in ["api_development", "frontend_development", "backend_development"]:
+                    required_tools.add("workflow_create")
+                elif pattern.name in ["performance_optimization"]:
+                    required_tools.update(["bottleneck_analyze", "performance_report"])
+                elif pattern.name in ["debugging"]:
+                    required_tools.update(["diagnostic_run", "log_analysis"])
+                elif pattern.name in ["security_audit"]:
+                    required_tools.update(["security_scan", "github_code_review"])
+                elif pattern.name in ["deployment"]:
+                    required_tools.update(["workflow_create", "parallel_execute"])
         
         # Add complexity-based tools
         if complexity.score >= 9:  # Enterprise level
@@ -188,11 +229,13 @@ class TaskAnalyzer:
                 "hive_mind_spawn", "neural_train", "ensemble_create",
                 "daa_agent_create", "daa_consensus"
             ])
+            required_tools.update(["hive_mind_spawn", "daa_agent_create"])
         elif complexity.score >= 7:  # Advanced level
             tool_set.update([
                 "neural_predict", "pattern_recognize", "cognitive_analyze",
                 "workflow_create", "parallel_execute"
             ])
+            required_tools.add("cognitive_analyze")
         elif complexity.score >= 5:  # Intermediate level
             tool_set.update([
                 "workflow_create", "memory_sync", "performance_report"
@@ -217,12 +260,20 @@ class TaskAnalyzer:
                 tool_set.update(agent_tool_mapping[agent])
         
         # Always include basic orchestration tools for non-trivial tasks
-        if complexity.score > 1:
-            tool_set.update(["swarm_init", "agent_spawn", "task_orchestrate"])
+        if complexity.score > 3:
+            required_tools.update(["swarm_init", "agent_spawn", "task_orchestrate"])
+        
+        # Memory usage is always required for context
+        required_tools.add("memory_usage")
+        
+        # Merge required into recommended
+        tool_set.update(required_tools)
         
         # Limit tools to prevent overwhelming output
         tool_list = sorted(list(tool_set))
-        return tool_list[:15]  # Max 15 tools
+        required_list = sorted(list(required_tools))
+        
+        return tool_list[:25], required_list  # Increased limit for more tools
     
     def analyze_prompt(self, prompt: str) -> Dict[str, Any]:
         """Complete prompt analysis"""
@@ -236,7 +287,7 @@ class TaskAnalyzer:
         agent_count, agent_roles = self.recommend_agents(patterns, complexity)
         
         # Get tool recommendations
-        mcp_tools = self.recommend_tools(patterns, complexity, agent_roles)
+        recommended_tools, required_tools = self.recommend_tools(patterns, complexity, agent_roles)
         
         # Extract technologies
         tech_involved = self._extract_technologies(prompt)
@@ -247,7 +298,8 @@ class TaskAnalyzer:
             "complexity_score": complexity_score,
             "agent_count": agent_count,
             "agent_roles": agent_roles,
-            "mcp_tools": mcp_tools,
+            "mcp_tools": recommended_tools,
+            "required_mcp_tools": required_tools,
             "tech_involved": tech_involved
         }
     

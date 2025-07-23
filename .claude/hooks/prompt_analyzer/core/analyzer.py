@@ -139,7 +139,8 @@ class PromptAnalyzer:
                 patterns,
                 context_summary,
                 instructions,
-                spawn_command
+                spawn_command,
+                analysis_data.get('mcp_injection', {})
             )
             
             # Log analysis
@@ -196,7 +197,7 @@ Consider the conversation context when making recommendations."""
         patterns = task_analysis.get('patterns', [])
         pattern_names = [p.name for p in patterns] if patterns else []
         
-        return f"""Analyze this prompt and provide a JSON response:
+        return f"""Analyze this prompt and provide a JSON response with MANDATORY MCP enforcement:
 {{
     "topic_genre": "brief classification",
     "complexity_score": 1-10,
@@ -205,8 +206,21 @@ Consider the conversation context when making recommendations."""
     "swarm_agents_recommended": 0-12,
     "recommended_agent_roles": ["specific", "roles"],
     "recommended_mcp_tools": ["tool", "names"],
-    "confidence_score": 0.0-1.0
+    "confidence_score": 0.0-1.0,
+    "mcp_injection": {{
+        "required": true/false,
+        "initialization": "mcp__claude-flow__swarm_init parameters",
+        "parallel_operations": ["list of operations to execute in ONE message"],
+        "enforcement_level": "suggest/guide/enforce/strict"
+    }}
 }}
+
+CRITICAL RULES FOR MCP INJECTION:
+1. If complexity_score >= 4, set mcp_injection.required = true
+2. ALWAYS recommend parallel execution in ONE message
+3. Include swarm_init for complexity >= 6
+4. Enforce batch operations (TodoWrite 5-10+, multiple Tasks, etc.)
+5. For complexity >= 8, use "strict" enforcement
 
 Initial Analysis:
 - Patterns detected: {', '.join(pattern_names)}
@@ -215,7 +229,7 @@ Initial Analysis:
 
 User Prompt: "{prompt}"
 
-Provide thoughtful, accurate analysis considering the initial findings."""
+Provide analysis with MANDATORY claude-flow patterns for parallel execution."""
     
     def _merge_analysis_results(self, local: Dict[str, Any], 
                                groq: Dict[str, Any]) -> Dict[str, Any]:
@@ -233,10 +247,60 @@ Provide thoughtful, accurate analysis considering the initial findings."""
                 'swarm_agents_recommended': groq.get('swarm_agents_recommended', local.get('agent_count', 0)),
                 'recommended_agent_roles': groq.get('recommended_agent_roles', local.get('agent_roles', [])),
                 'recommended_mcp_tools': groq.get('recommended_mcp_tools', local.get('mcp_tools', [])),
-                'confidence_score': groq.get('confidence_score', 0.8)
+                'confidence_score': groq.get('confidence_score', 0.8),
+                'mcp_injection': groq.get('mcp_injection', self._get_default_mcp_injection(local))
             })
+            # Add required tools to MCP injection
+            if 'required_mcp_tools' in local:
+                merged['mcp_injection']['required_tools'] = local['required_mcp_tools']
+        else:
+            # No Groq response, add default MCP injection based on complexity
+            merged['mcp_injection'] = self._get_default_mcp_injection(local)
+            # Add required tools
+            if 'required_mcp_tools' in local:
+                merged['mcp_injection']['required_tools'] = local['required_mcp_tools']
         
         return merged
+    
+    def _get_default_mcp_injection(self, analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """Get default MCP injection requirements based on complexity"""
+        complexity = analysis.get('complexity_score', 3)
+        agent_count = analysis.get('agent_count', 0)
+        required_tools = analysis.get('required_mcp_tools', [])
+        
+        if complexity >= 6:
+            return {
+                'required': True,
+                'initialization': f'mcp__claude-flow__swarm_init(topology="hierarchical", maxAgents={agent_count})',
+                'required_tools': required_tools,
+                'parallel_operations': [
+                    f'Task spawning {agent_count} agents in ONE message',
+                    'TodoWrite with 8-12 items in ONE call',
+                    'All file operations batched together',
+                    'Memory operations for context storage'
+                ],
+                'enforcement_level': 'strict' if complexity >= 8 else 'enforce'
+            }
+        elif complexity >= 4:
+            return {
+                'required': True,
+                'initialization': f'mcp__claude-flow__swarm_init(topology="mesh", maxAgents={agent_count})',
+                'required_tools': required_tools,
+                'parallel_operations': [
+                    f'Task spawning {agent_count} agents in parallel',
+                    'TodoWrite with 5-10 items',
+                    'Batch file reads together'
+                ],
+                'enforcement_level': 'guide'
+            }
+        else:
+            return {
+                'required': False,
+                'initialization': '',
+                'required_tools': [],
+                'parallel_operations': ['Direct implementation'],
+                'enforcement_level': 'suggest'
+            }
     
     def _create_analysis_result(self, task_analysis: Dict[str, Any]) -> Dict[str, Any]:
         """Create analysis result from local analysis only"""
@@ -259,7 +323,8 @@ Provide thoughtful, accurate analysis considering the initial findings."""
                                patterns: list,
                                context_summary: str,
                                instructions: Any,
-                               spawn_command: Any) -> str:
+                               spawn_command: Any,
+                               mcp_injection: Dict[str, Any]) -> str:
         """Format the complete output"""
         sections = []
         
@@ -267,6 +332,12 @@ Provide thoughtful, accurate analysis considering the initial findings."""
         sections.append(self.formatter.format_analysis_output(
             analysis, enhancement, patterns, context_summary
         ))
+        
+        # MCP injection requirements (high priority)
+        if mcp_injection:
+            mcp_output = self.formatter.format_mcp_injection(mcp_injection)
+            if mcp_output:
+                sections.append(mcp_output)
         
         # Execution instructions
         if instructions:
@@ -278,5 +349,13 @@ Provide thoughtful, accurate analysis considering the initial findings."""
         # Spawn command
         if spawn_command and spawn_command.agent_count > 0:
             sections.append(spawn_command.format())
+        
+        # FINAL ACTION INSTRUCTION - Always at the end
+        action_instruction = self.formatter.format_action_instruction(
+            analysis.swarm_agents_recommended,
+            analysis.recommended_agent_roles,
+            analysis.task_patterns  # Pass patterns for context-aware first action
+        )
+        sections.append(action_instruction)
         
         return "\n".join(sections)

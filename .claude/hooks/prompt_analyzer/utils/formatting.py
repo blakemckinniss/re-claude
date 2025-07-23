@@ -107,6 +107,73 @@ class OutputFormatter:
         return spawn_cmd.format()
     
     @staticmethod
+    def format_action_instruction(agent_count: int, agent_roles: List[str], 
+                                 task_patterns: List[str] = None,
+                                 first_action: str = None) -> str:
+        """Format the final action instruction that tells Claude what to do next"""
+        # Determine the first action based on task patterns and context
+        if not first_action:
+            if task_patterns:
+                # Pattern-specific first actions
+                pattern_actions = {
+                    "api_development": "design the API structure and define endpoints",
+                    "frontend_development": "create the component architecture and UI flow",
+                    "backend_development": "design the service architecture and data models",
+                    "database_operations": "analyze the schema requirements and relationships",
+                    "testing_automation": "identify test scenarios and coverage requirements",
+                    "performance_optimization": "profile the current system and identify bottlenecks",
+                    "security_audit": "scan for vulnerabilities and review security patterns",
+                    "debugging": "reproduce the issue and gather diagnostic information",
+                    "deployment": "review the deployment requirements and infrastructure",
+                    "refactoring": "analyze the current code structure and identify improvements",
+                    "documentation": "outline the documentation structure and key topics",
+                    "architecture_design": "define system components and their interactions"
+                }
+                
+                # Use the first matching pattern
+                for pattern in task_patterns:
+                    if pattern in pattern_actions:
+                        first_action = pattern_actions[pattern]
+                        break
+            
+            # Fallback based on agent count
+            if not first_action:
+                if agent_count >= 7:
+                    first_action = "analyze the system architecture and create a comprehensive implementation plan"
+                elif agent_count >= 5:
+                    first_action = "break down the requirements into specific tasks and components"
+                else:
+                    first_action = "understand the requirements and plan the implementation approach"
+        
+        # Format agent roles nicely
+        if agent_roles:
+            roles_str = ", ".join(agent_roles[:3])
+            if len(agent_roles) > 3:
+                roles_str += f" (+{len(agent_roles) - 3} more)"
+        else:
+            roles_str = "specialized agents"
+        
+        # Determine todo count based on complexity
+        todo_count = "8-12" if agent_count >= 7 else "5-10"
+        
+        instruction = f"""
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 NEXT ACTION (EXECUTE NOW):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Execute ALL of these in ONE message:
+1️⃣ Initialize swarm with mcp__claude-flow__swarm_init (if complexity >= 4)
+2️⃣ SPAWN {agent_count} agents ({roles_str}) using parallel Task calls
+3️⃣ CREATE TodoWrite with {todo_count} todos (mixed statuses/priorities)
+4️⃣ READ any relevant files mentioned in the requirements
+5️⃣ THEN: {first_action}
+
+⚡ Remember: ALL operations above in ONE message for maximum efficiency!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"""
+        return instruction
+    
+    @staticmethod
     def format_critical_reminders() -> str:
         """Format critical reminders section"""
         return """
@@ -154,5 +221,49 @@ Message: {str(error)}"""
         
         if context.get('fallback_used'):
             output += "\n\n📌 Using fallback analysis (Groq unavailable)"
+        
+        return output
+    
+    @staticmethod
+    def format_mcp_injection(mcp_injection: Dict[str, Any]) -> str:
+        """Format MCP injection requirements"""
+        if not mcp_injection or not mcp_injection.get('required'):
+            return ""
+        
+        enforcement_icons = {
+            'suggest': '💡',
+            'guide': '🎯',
+            'enforce': '⚡',
+            'strict': '🔥'
+        }
+        
+        level = mcp_injection.get('enforcement_level', 'suggest')
+        icon = enforcement_icons.get(level, '📌')
+        
+        output = f"\n{icon} MCP ENFORCEMENT ({level.upper()})"
+        output += "\n" + "═" * 50
+        
+        if mcp_injection.get('initialization'):
+            output += f"\n🚀 REQUIRED: {mcp_injection['initialization']}"
+        
+        # Display required MCP tools prominently
+        required_tools = mcp_injection.get('required_tools', [])
+        if required_tools:
+            output += "\n\n🔧 MANDATORY MCP TOOLS (must use these):"
+            # Format tools with mcp__ prefix for clarity
+            for tool in required_tools[:8]:  # Limit display
+                output += f"\n  🕹️ mcp__claude-flow__{tool}"
+            if len(required_tools) > 8:
+                output += f"\n  ... (+{len(required_tools) - 8} more required tools)"
+        
+        if mcp_injection.get('parallel_operations'):
+            output += "\n\n📦 EXECUTE IN ONE MESSAGE:"
+            for op in mcp_injection['parallel_operations']:
+                output += f"\n  • {op}"
+        
+        if level in ['enforce', 'strict']:
+            output += "\n\n⛔ VIOLATIONS WILL BE BLOCKED!"
+            output += "\n✅ Correct: Use ALL required MCP tools + parallel operations"
+            output += "\n❌ Wrong: Skip MCP tools or use sequential operations"
         
         return output

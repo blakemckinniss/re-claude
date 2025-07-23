@@ -15,6 +15,11 @@ from pathlib import Path
 from dataclasses import dataclass
 from enum import Enum
 
+# Add local memory import
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from memory.local_memory import LocalMemoryStore
+from mcp_tool_mappings import get_required_tools, TASK_PATTERN_TOOLS
+
 class HookEvent(Enum):
     PRE_TOOL_USE = "PreToolUse"
     POST_TOOL_USE = "PostToolUse"
@@ -45,10 +50,12 @@ class HookResponse:
     suppress_output: bool = False
 
 class ClaudeFlowIntegration:
-    """Integration with claude-flow commands"""
+    """Integration with claude-flow commands with local memory fallback"""
     
-    @staticmethod
-    def run_command(cmd: List[str], capture_output: bool = True) -> Tuple[int, str, str]:
+    def __init__(self):
+        self.local_memory = LocalMemoryStore()
+    
+    def run_command(self, cmd: List[str], capture_output: bool = True) -> Tuple[int, str, str]:
         """Run claude-flow command and return exit code, stdout, stderr"""
         try:
             result = subprocess.run(
@@ -63,30 +70,43 @@ class ClaudeFlowIntegration:
         except Exception as e:
             return 1, "", str(e)
     
-    @staticmethod
-    def memory_store(key: str, value: str, ttl: Optional[int] = None) -> bool:
-        """Store value in claude-flow memory"""
+    def memory_store(self, key: str, value: str, ttl: Optional[int] = None) -> bool:
+        """Store value in claude-flow memory with local fallback"""
+        # Try claude-flow first
         cmd = ["npx", "claude-flow@alpha", "memory", "store", key, value]
         if ttl:
             cmd.extend(["--ttl", str(ttl)])
-        exit_code, _, _ = ClaudeFlowIntegration.run_command(cmd)
-        return exit_code == 0
+        exit_code, _, _ = self.run_command(cmd)
+        
+        # Use local memory as fallback or primary
+        self.local_memory.store(key, value, ttl)
+        
+        return exit_code == 0 or True  # Always succeed with local fallback
     
-    @staticmethod
-    def memory_query(key: str) -> Optional[str]:
-        """Query value from claude-flow memory"""
+    def memory_query(self, key: str) -> Optional[str]:
+        """Query value from claude-flow memory with local fallback"""
+        # Try local memory first (faster)
+        local_value = self.local_memory.query(key)
+        if local_value:
+            return local_value
+        
+        # Try claude-flow
         cmd = ["npx", "claude-flow@alpha", "memory", "query", key]
-        exit_code, stdout, _ = ClaudeFlowIntegration.run_command(cmd)
+        exit_code, stdout, _ = self.run_command(cmd)
         if exit_code == 0:
             try:
                 data = json.loads(stdout)
-                return data.get("value")
+                value = data.get("value")
+                if value:
+                    # Cache in local memory
+                    self.local_memory.store(key, value)
+                return value
             except json.JSONDecodeError:
-                return None
+                pass
+        
         return None
     
-    @staticmethod
-    def swarm_init(topology: str = "mesh", max_agents: int = 5) -> bool:
+    def swarm_init(self, topology: str = "mesh", max_agents: int = 5) -> bool:
         """Initialize swarm with specified topology"""
         cmd = [
             "npx", "claude-flow@alpha", "coordination", "swarm-init",
@@ -94,11 +114,10 @@ class ClaudeFlowIntegration:
             "--max-agents", str(max_agents),
             "--strategy", "adaptive"
         ]
-        exit_code, _, _ = ClaudeFlowIntegration.run_command(cmd)
+        exit_code, _, _ = self.run_command(cmd)
         return exit_code == 0
     
-    @staticmethod
-    def agent_spawn(agent_type: str, name: str) -> bool:
+    def agent_spawn(self, agent_type: str, name: str) -> bool:
         """Spawn a new agent"""
         cmd = [
             "npx", "claude-flow@alpha", "coordination", "agent-spawn",
@@ -106,7 +125,7 @@ class ClaudeFlowIntegration:
             "--name", name,
             "--capabilities", "task-specific"
         ]
-        exit_code, _, _ = ClaudeFlowIntegration.run_command(cmd)
+        exit_code, _, _ = self.run_command(cmd)
         return exit_code == 0
 
 class TaskAnalyzer:
@@ -202,6 +221,10 @@ class HookRouter:
     def __init__(self):
         self.cf = ClaudeFlowIntegration()
         self.analyzer = TaskAnalyzer()
+        # Session tracking for parallel enforcement
+        self.current_message_tools = {}
+        # Load enforcement level from config
+        self.enforcement_level = self._load_enforcement_level()
     
     def route_hook(self, hook_input: HookInput) -> HookResponse:
         """Route hook to appropriate handler based on event and tool"""
@@ -280,6 +303,30 @@ class HookRouter:
         auto_spawn = hook_input.tool_input.get("auto_spawn_agents", True)
         timestamp = int(time.time())
         
+        # Check if required MCP tools are being skipped
+        skip_validation = self._check_mcp_tools_skip(session_id, "Task")
+        if skip_validation:
+            return skip_validation
+        
+        # Check for sequential Task spawning
+        message_key = f"session/{session_id}/current_message_tools"
+        current_tools = json.loads(self.cf.memory_query(message_key) or "[]")
+        task_count = current_tools.count("Task")
+        
+        if task_count > 0 and self.enforcement_level in ["enforce", "strict"]:
+            # Check if this is part of a batch or sequential
+            last_task_time = self.cf.memory_query(f"session/{session_id}/last_task_time")
+            if last_task_time and (timestamp - int(last_task_time or 0)) > 2:
+                return self._block_with_visual_guidance(
+                    "SEQUENTIAL AGENT SPAWNING DETECTED",
+                    "Spawn ALL agents in ONE message using parallel Task calls!",
+                    "Multiple Task calls in a single message",
+                    "Sequential Task calls across messages"
+                )
+        
+        # Store task timing
+        self.cf.memory_store(f"session/{session_id}/last_task_time", str(timestamp), 60)
+        
         # Analyze task complexity
         self._log_info("🧠 Analyzing task complexity...")
         complexity, suggested_agents = self.analyzer.analyze_complexity(task_desc)
@@ -330,17 +377,89 @@ class HookRouter:
     
     def _handle_pre_todo_write(self, hook_input: HookInput) -> HookResponse:
         """Handle batch TODO enforcement"""
-        # Implementation for batch TODO enforcement
+        todos = hook_input.tool_input.get("todos", [])
+        session_id = hook_input.session_id
+        
+        # Check if required MCP tools are being skipped
+        skip_validation = self._check_mcp_tools_skip(session_id, "TodoWrite")
+        if skip_validation:
+            return skip_validation
+        
+        # Check for sequential TodoWrite calls
+        message_key = f"session/{session_id}/current_message_tools"
+        current_tools = json.loads(self.cf.memory_query(message_key) or "[]")
+        
+        if "TodoWrite" in current_tools:
+            return self._block_with_visual_guidance(
+                "SEQUENTIAL TodoWrite DETECTED",
+                "Batch ALL todos in ONE TodoWrite call!",
+                "TodoWrite with 5-10+ todos in a single call",
+                "Multiple TodoWrite calls in sequence"
+            )
+        
+        # Enforce minimum batch size
+        if len(todos) < 5:
+            if self.enforcement_level in ["enforce", "strict"]:
+                return HookResponse(
+                    decision=Decision.BLOCK.value,
+                    reason="❌ TodoWrite must include at least 5-10 todos in a single call. Batch all todos together!"
+                )
+            else:
+                self._log_info("⚠️ Warning: TodoWrite should include 5-10+ todos for optimal batching")
+        
+        # Check for proper status distribution
+        statuses = [todo.get("status") for todo in todos]
+        if len(todos) >= 5 and all(s == "pending" for s in statuses):
+            self._log_info("💡 Tip: Include mixed statuses (completed, in_progress, pending) to show progress")
+        
+        # Track tool usage
+        current_tools.append("TodoWrite")
+        self.cf.memory_store(message_key, json.dumps(current_tools), 60)
+        
         return HookResponse(decision=Decision.APPROVE.value)
     
     def _handle_pre_bash(self, hook_input: HookInput) -> HookResponse:
         """Handle pre-bash command validation"""
-        # Implementation for bash command validation
+        command = hook_input.tool_input.get("command", "")
+        session_id = hook_input.session_id
+        
+        # Track for parallel enforcement
+        message_key = f"session/{session_id}/current_message_tools"
+        current_tools = json.loads(self.cf.memory_query(message_key) or "[]")
+        
+        # Check for dangerous commands
+        dangerous_patterns = [
+            r"rm\s+-rf\s+/",
+            r"curl.*\|\s*bash",
+            r"wget.*\|\s*sh",
+            r"sudo\s+rm",
+            r":(){\s*:\|:\s*&\s*};"
+        ]
+        
+        for pattern in dangerous_patterns:
+            if re.search(pattern, command):
+                return HookResponse(
+                    decision=Decision.BLOCK.value,
+                    reason=f"Dangerous command pattern detected: {pattern}"
+                )
+        
+        # Track tool usage
+        current_tools.append("Bash")
+        self.cf.memory_store(message_key, json.dumps(current_tools), 60)
+        
         return HookResponse(decision=Decision.APPROVE.value)
     
     def _handle_pre_file_operation(self, hook_input: HookInput) -> HookResponse:
         """Handle pre-file operation validation"""
         file_path = hook_input.tool_input.get("file_path", "")
+        session_id = hook_input.session_id
+        tool_name = hook_input.tool_name
+        
+        # Check if required MCP tools are being skipped (for write operations)
+        if tool_name in ["Write", "Edit", "MultiEdit"]:
+            skip_validation = self._check_mcp_tools_skip(session_id, tool_name)
+            if skip_validation:
+                return skip_validation
         
         # Block modifications to sensitive files
         sensitive_patterns = [".env", "secrets.json", ".git/"]
@@ -359,6 +478,33 @@ class HookRouter:
     
     def _handle_pre_mcp_operation(self, hook_input: HookInput) -> HookResponse:
         """Handle MCP coordination validation"""
+        tool_name = hook_input.tool_name
+        session_id = hook_input.session_id
+        
+        # Special handling for swarm_init
+        if tool_name == "mcp__claude-flow__swarm_init":
+            # Mark that swarm is being initialized
+            self.cf.memory_store(
+                f"session/{session_id}/swarm_init_pending",
+                "true",
+                60
+            )
+        
+        # Track MCP tool usage
+        message_key = f"session/{session_id}/current_message_tools"
+        current_tools = json.loads(self.cf.memory_query(message_key) or "[]")
+        current_tools.append(tool_name)
+        self.cf.memory_store(message_key, json.dumps(current_tools), 60)
+        
+        # Track specific MCP tools used (for required tool validation)
+        mcp_tools_key = f"session/{session_id}/mcp_tools_used"
+        mcp_tools_used = json.loads(self.cf.memory_query(mcp_tools_key) or "[]")
+        # Extract tool name without prefix
+        clean_tool_name = tool_name.replace("mcp__claude-flow__", "")
+        if clean_tool_name not in mcp_tools_used:
+            mcp_tools_used.append(clean_tool_name)
+        self.cf.memory_store(mcp_tools_key, json.dumps(mcp_tools_used), 3600)
+        
         return HookResponse(decision=Decision.APPROVE.value)
     
     def _handle_post_task(self, hook_input: HookInput) -> HookResponse:
@@ -410,6 +556,19 @@ class HookRouter:
     
     def _handle_post_swarm_init(self, hook_input: HookInput) -> HookResponse:
         """Handle post-swarm initialization"""
+        session_id = hook_input.session_id
+        # Mark swarm as initialized
+        self.cf.memory_store(
+            f"session/{session_id}/swarm_initialized",
+            "true",
+            3600
+        )
+        # Clear pending flag
+        self.cf.memory_store(
+            f"session/{session_id}/swarm_init_pending",
+            "false",
+            60
+        )
         return HookResponse()
     
     def _handle_post_agent_spawn(self, hook_input: HookInput) -> HookResponse:
@@ -421,7 +580,38 @@ class HookRouter:
         return HookResponse()
     
     def _handle_user_prompt_submit(self, hook_input: HookInput) -> HookResponse:
-        """Handle user prompt submission"""
+        """Handle user prompt submission with MCP injection"""
+        prompt = hook_input.tool_input.get("prompt", "")
+        session_id = hook_input.session_id
+        
+        # Reset message tracking for new prompt
+        self._reset_message_tracking(session_id)
+        
+        # Analyze complexity for MCP injection
+        complexity, agent_count = self.analyzer.analyze_complexity(prompt)
+        complexity_score = self._get_complexity_score(complexity)
+        
+        # Get full task analysis including required tools
+        full_analysis = self.analyzer.analyze_prompt(prompt)
+        required_tools = full_analysis.get('required_mcp_tools', [])
+        
+        # Auto-inject MCP requirements for complex tasks
+        if complexity_score >= 4 and self.enforcement_level in ["enforce", "strict"]:
+            enhanced_prompt = self._inject_mcp_requirements(prompt, complexity, agent_count, required_tools)
+            hook_input.tool_input["prompt"] = enhanced_prompt
+            
+            # Store enforcement metadata including required tools
+            self.cf.memory_store(
+                f"session/{session_id}/enforcement_active", 
+                "true", 
+                3600
+            )
+            self.cf.memory_store(
+                f"session/{session_id}/required_mcp_tools",
+                json.dumps(required_tools),
+                3600
+            )
+        
         return HookResponse()
     
     def _handle_stop(self, hook_input: HookInput) -> HookResponse:
@@ -434,6 +624,14 @@ class HookRouter:
     
     def _handle_notification(self, hook_input: HookInput) -> HookResponse:
         """Handle notification broadcasting"""
+        # Reset message tracking on certain notifications
+        notification_type = hook_input.tool_input.get("type", "")
+        session_id = hook_input.session_id
+        
+        if notification_type in ["message_complete", "prompt_processed"]:
+            # Validate MCP tool usage before resetting
+            self._validate_mcp_tool_usage(session_id)
+            self._reset_message_tracking(session_id)
         return HookResponse()
     
     def _log_info(self, message: str):
@@ -453,6 +651,275 @@ class HookRouter:
         self._log_info(f"🎯 Complexity:   {complexity}")
         self._log_info(f"👥 Agents:       {suggested_agents} suggested")
         self._log_info("═══════════════════════════════════════════")
+    
+    def _block_with_visual_guidance(self, violation: str, fix: str, 
+                                   correct: str, incorrect: str) -> HookResponse:
+        """Block with clear visual guidance"""
+        guidance = f"""
+❌ CLAUDE-FLOW VIOLATION DETECTED
+═══════════════════════════════════════════════
+
+{violation}
+
+✅ CORRECT PATTERN:
+┌─ Single Message ─────────────────────────────┐
+│ • mcp__claude-flow__swarm_init               │
+│ • Task (Agent 1) + Task (Agent 2) + Task (3) │
+│ • TodoWrite (10+ todos)                      │
+│ • Read (multiple files)                      │
+└──────────────────────────────────────────────┘
+
+❌ YOUR PATTERN: {incorrect}
+
+🔧 FIX: {fix}
+
+⚡ ENFORCEMENT LEVEL: {self.enforcement_level.upper()}
+"""
+        
+        return HookResponse(
+            decision=Decision.BLOCK.value,
+            reason=guidance
+        )
+    
+    def _reset_message_tracking(self, session_id: str):
+        """Reset tool tracking for new message"""
+        message_key = f"session/{session_id}/current_message_tools"
+        self.cf.memory_store(message_key, "[]", 60)
+
+    def _get_complexity_score(self, complexity: str) -> int:
+        """Convert complexity string to numeric score"""
+        scores = {"low": 3, "medium": 5, "high": 8}
+        return scores.get(complexity, 5)
+    
+    def _inject_mcp_requirements(self, prompt: str, complexity: str, agent_count: int, required_tools: List[str] = None) -> str:
+        """Inject MCP requirements into prompt"""
+        topology = self.analyzer.suggest_topology(prompt)
+        required_tools = required_tools or []
+        
+        # Check for sequential patterns and rewrite if needed
+        rewritten_prompt = self._rewrite_for_compliance(prompt)
+        
+        injection = f"""
+{rewritten_prompt}
+
+[🔥 MCP ENFORCEMENT - {complexity.upper()} COMPLEXITY]
+⚡ MANDATORY PARALLEL EXECUTION:
+1. Initialize: mcp__claude-flow__swarm_init(topology="{topology}", maxAgents={agent_count})
+2. Spawn ALL {agent_count} agents in ONE message using parallel Task calls
+3. Create TodoWrite with 8-12 items in ONE call
+4. Batch ALL file operations together
+5. Use mcp__claude-flow__memory_usage for context storage"""
+        
+        # Add required MCP tools section
+        if required_tools:
+            injection += "\n\n🔧 REQUIRED MCP TOOLS (MUST USE):"
+            for tool in required_tools[:10]:  # Limit to prevent overwhelming
+                injection += f"\n• mcp__claude-flow__{tool}"
+            if len(required_tools) > 10:
+                injection += f"\n• ... (+{len(required_tools) - 10} more required tools)"
+        
+        injection += "\n\n⛔ VIOLATIONS WILL BE BLOCKED! Execute ALL operations in ONE message."
+        
+        return injection
+    
+    def _rewrite_for_compliance(self, prompt: str) -> str:
+        """Rewrite prompts to be claude-flow compliant"""
+        # Detect sequential patterns
+        sequential_patterns = [
+            r"\bthen\b",
+            r"\bafter that\b",
+            r"\bfollowed by\b",
+            r"\bnext\b",
+            r"\bstep by step\b",
+            r"\bone by one\b",
+            r"\bsequentially\b"
+        ]
+        
+        has_sequential = any(re.search(pattern, prompt, re.IGNORECASE) for pattern in sequential_patterns)
+        
+        if has_sequential and self.enforcement_level in ["enforce", "strict"]:
+            # Add parallel execution note
+            return f"""{prompt}
+
+[🔄 REWRITTEN FOR PARALLEL EXECUTION]
+Execute ALL operations concurrently:
+• Initialize swarm with appropriate topology
+• Spawn ALL required agents in parallel
+• Create complete todo list (5-10+ items)
+• Read ALL necessary files simultaneously
+• Store decisions in memory for persistence
+"""
+        
+        return prompt
+    
+    def _is_complex_task(self, prompt: str) -> bool:
+        """Check if task requires MCP coordination"""
+        complexity, _ = self.analyzer.analyze_complexity(prompt)
+        return self._get_complexity_score(complexity) >= 4
+    
+    def _load_enforcement_level(self) -> str:
+        """Load enforcement level from settings.json"""
+        try:
+            settings_path = Path.home() / ".claude" / "settings.json"
+            if settings_path.exists():
+                with open(settings_path, 'r') as f:
+                    settings = json.load(f)
+                    return settings.get("claude_flow_enforcement", "enforce")
+        except Exception:
+            pass
+        return "enforce"  # Default to enforce
+    
+    def _validate_mcp_tool_usage(self, session_id: str) -> None:
+        """Validate that required MCP tools were actually used"""
+        # Check if enforcement is active for this session
+        enforcement_active = self.cf.memory_query(f"session/{session_id}/enforcement_active") == "true"
+        if not enforcement_active:
+            return
+        
+        # Get required tools
+        required_tools_json = self.cf.memory_query(f"session/{session_id}/required_mcp_tools")
+        if not required_tools_json:
+            return
+        
+        try:
+            required_tools = json.loads(required_tools_json)
+            if not required_tools:
+                return
+        except json.JSONDecodeError:
+            return
+        
+        # Get actually used MCP tools
+        used_tools_json = self.cf.memory_query(f"session/{session_id}/mcp_tools_used")
+        used_tools = json.loads(used_tools_json) if used_tools_json else []
+        
+        # Find missing required tools
+        missing_tools = [tool for tool in required_tools if tool not in used_tools]
+        
+        if missing_tools and self.enforcement_level in ["enforce", "strict"]:
+            # Generate validation report
+            self._generate_mcp_validation_report(required_tools, used_tools, missing_tools)
+    
+    def _generate_mcp_validation_report(self, required: List[str], used: List[str], missing: List[str]) -> None:
+        """Generate MCP tool usage validation report"""
+        report = f"""
+🔍 MCP TOOL USAGE VALIDATION
+═══════════════════════════════════════════════
+
+📋 Required MCP Tools: {len(required)}
+✅ Used MCP Tools: {len(used)}
+❌ Missing Required Tools: {len(missing)}
+
+⚠️ MISSING REQUIRED TOOLS:"""
+        
+        for tool in missing[:10]:  # Limit display
+            report += f"\n   ❌ mcp__claude-flow__{tool}"
+        
+        if len(missing) > 10:
+            report += f"\n   ... (+{len(missing) - 10} more missing tools)"
+        
+        report += "\n\n✅ TOOLS THAT WERE USED:"
+        for tool in used[:5]:  # Show some that were used
+            report += f"\n   ✓ mcp__claude-flow__{tool}"
+        
+        if len(used) > 5:
+            report += f"\n   ... (+{len(used) - 5} more used tools)"
+        
+        report += f"""
+
+📊 COMPLIANCE SCORE: {(len(used) / len(required) * 100):.1f}%
+
+💡 RECOMMENDATION: Review and use the missing required tools for complete task execution.
+These tools were identified as MANDATORY for your task complexity and patterns.
+
+⚡ ENFORCEMENT LEVEL: {self.enforcement_level.upper()}
+"""
+        
+        # Log the validation report
+        self._log_info(report)
+        
+        # Store validation results for metrics
+        validation_result = {
+            "timestamp": int(time.time()),
+            "required_count": len(required),
+            "used_count": len(used),
+            "missing_count": len(missing),
+            "compliance_score": len(used) / len(required) if required else 1.0,
+            "missing_tools": missing
+        }
+        
+        # Store validation metrics
+        metrics_key = f"session/{self.cf.memory_query('current_session_id') or 'unknown'}/mcp_validation_metrics"
+        self.cf.memory_store(metrics_key, json.dumps(validation_result), 3600)
+    
+    def _check_mcp_tools_skip(self, session_id: str, current_tool: str) -> Optional[HookResponse]:
+        """Check if required MCP tools are being skipped in favor of other operations"""
+        # Only check if enforcement is active and strict
+        if self.enforcement_level not in ["enforce", "strict"]:
+            return None
+        
+        enforcement_active = self.cf.memory_query(f"session/{session_id}/enforcement_active") == "true"
+        if not enforcement_active:
+            return None
+        
+        # Get required tools
+        required_tools_json = self.cf.memory_query(f"session/{session_id}/required_mcp_tools")
+        if not required_tools_json:
+            return None
+        
+        try:
+            required_tools = json.loads(required_tools_json)
+            if not required_tools:
+                return None
+        except json.JSONDecodeError:
+            return None
+        
+        # Get used tools
+        used_tools_json = self.cf.memory_query(f"session/{session_id}/mcp_tools_used")
+        used_tools = json.loads(used_tools_json) if used_tools_json else []
+        
+        # Check if swarm_init is required but not used
+        if "swarm_init" in required_tools and "swarm_init" not in used_tools:
+            if current_tool in ["Task", "TodoWrite"] and not current_tool.startswith("mcp__"):
+                return self._block_with_visual_guidance(
+                    "REQUIRED MCP TOOL SKIPPED: swarm_init",
+                    "MUST initialize swarm with mcp__claude-flow__swarm_init FIRST!",
+                    "1. mcp__claude-flow__swarm_init 2. Then Task/TodoWrite",
+                    "Skipping required MCP initialization"
+                )
+        
+        # Check if other critical MCP tools are missing
+        critical_tools = ["memory_usage", "task_orchestrate", "agent_spawn"]
+        missing_critical = [t for t in critical_tools if t in required_tools and t not in used_tools]
+        
+        # Allow some operations before all tools are used, but warn
+        if missing_critical and len(used_tools) < 2:
+            # Get current message tools to check patterns
+            message_key = f"session/{session_id}/current_message_tools"
+            current_tools = json.loads(self.cf.memory_query(message_key) or "[]")
+            
+            # Count non-MCP tools
+            non_mcp_count = sum(1 for t in current_tools if not t.startswith("mcp__"))
+            
+            if non_mcp_count > 3 and self.enforcement_level == "strict":
+                missing_list = ", ".join([f"mcp__claude-flow__{t}" for t in missing_critical[:3]])
+                return HookResponse(
+                    decision=Decision.BLOCK.value,
+                    reason=f"""
+⚠️ MCP TOOLS ENFORCEMENT - USE REQUIRED TOOLS FIRST
+═══════════════════════════════════════════════════
+
+📋 Missing Required MCP Tools: {missing_list}
+
+🔧 These tools were identified as MANDATORY for your task.
+   Use them BEFORE proceeding with other operations!
+
+💡 TIP: Start with MCP coordination tools, then do implementation.
+
+⚡ ENFORCEMENT LEVEL: {self.enforcement_level.upper()}
+"""
+                )
+        
+        return None
 
 def main():
     """Main entry point for the hook router"""

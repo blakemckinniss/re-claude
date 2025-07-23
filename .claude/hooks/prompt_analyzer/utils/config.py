@@ -52,6 +52,9 @@ class Config:
     @classmethod
     def from_env(cls) -> 'Config':
         """Create config from environment variables"""
+        # Default log directory to local prompt_analyzer/logs folder
+        default_log_dir = str(Path(__file__).parent.parent / "logs")
+        
         return cls(
             groq_api_key=os.getenv('GROQ_API_KEY'),
             groq_model=os.getenv('GROQ_MODEL', cls.groq_model),
@@ -68,9 +71,9 @@ class Config:
             max_agents=int(os.getenv('MAX_AGENTS', str(cls.max_agents))),
             max_tools=int(os.getenv('MAX_TOOLS', str(cls.max_tools))),
             
-            log_dir=os.getenv('LOG_DIR'),
+            log_dir=os.getenv('LOG_DIR', default_log_dir),
             log_level=os.getenv('LOG_LEVEL', cls.log_level),
-            log_to_stderr=os.getenv('LOG_TO_STDERR', '').lower() in ('true', '1', 'yes'),
+            log_to_stderr=os.getenv('LOG_TO_STDERR', 'true').lower() in ('true', '1', 'yes'),
             max_log_size_mb=int(os.getenv('MAX_LOG_SIZE_MB', str(cls.max_log_size_mb))),
             max_log_files=int(os.getenv('MAX_LOG_FILES', str(cls.max_log_files))),
             

@@ -1,0 +1,65 @@
+{
+  "default": [
+    {
+      "key": "task_analysis_2025-07-22T19-28-37-371549",
+      "value": "{\"timestamp\": \"2025-07-22T19:28:37.371549\", \"prompt\": \"Fix the bug in the login function\", \"complexity\": 3, \"topic\": \"Debugging\", \"tech\": [], \"agents\": [\"coordinator\", \"tester\", \"analyst\", \"coder\"], \"patterns\": [\"debugging\"], \"agent_count\": 4}",
+      "namespace": "default",
+      "timestamp": 1753226918223
+    },
+    {
+      "key": "analysis_2025-07-22T19-28-37-371549",
+      "value": "{\"timestamp\": \"2025-07-22T19:28:37.371549\", \"type\": \"analysis\", \"complexity\": 3, \"topic\": \"Debugging\"}",
+      "namespace": "default",
+      "timestamp": 1753226919153
+    },
+    {
+      "key": "task_analysis_2025-07-22T19-28-42-989043",
+      "value": "{\"timestamp\": \"2025-07-22T19:28:42.989043\", \"prompt\": \"Build a REST API with authentication, implement user CRUD operations, add JWT tokens, create unit tests, and document the endpoints\", \"complexity\": 8, \"topic\": \"Api Development\", \"tech\": [\"API\"], \"agents\": [\"coordinator\", \"documenter\", \"specialist\", \"monitor\", \"coder\", \"designer\", \"architect\", \"tester\", \"reviewer\"], \"patterns\": [\"api_development\", \"testing_automation\", \"frontend_development\", \"security_audit\", \"documentation\"], \"agent_count\": 9}",
+      "namespace": "default",
+      "timestamp": 1753226923869
+    },
+    {
+      "key": "analysis_2025-07-22T19-28-42-989043",
+      "value": "{\"timestamp\": \"2025-07-22T19:28:42.989043\", \"type\": \"analysis\", \"complexity\": 8, \"topic\": \"Api Development\"}",
+      "namespace": "default",
+      "timestamp": 1753226924778
+    },
+    {
+      "key": "task_analysis_2025-07-22T19-28-48-485011",
+      "value": "{\"timestamp\": \"2025-07-22T19:28:48.485011\", \"prompt\": \"Make it better\", \"complexity\": 2, \"topic\": \"General Task\", \"tech\": [], \"agents\": [\"coordinator\"], \"patterns\": [], \"agent_count\": 1}",
+      "namespace": "default",
+      "timestamp": 1753226929314
+    },
+    {
+      "key": "analysis_2025-07-22T19-28-48-485011",
+      "value": "{\"timestamp\": \"2025-07-22T19:28:48.485011\", \"type\": \"analysis\", \"complexity\": 2, \"topic\": \"General Task\"}",
+      "namespace": "default",
+      "timestamp": 1753226930232
+    },
+    {
+      "key": "task_analysis_2025-07-22T19-28-53-922585",
+      "value": "{\"timestamp\": \"2025-07-22T19:28:53.922585\", \"prompt\": \"Use Claude Flow swarm to build a full-stack application with React frontend and Node.js backend\", \"complexity\": 4, \"topic\": \"Frontend Development\", \"tech\": [\"JavaScript\"], \"agents\": [\"coordinator\", \"architect\", \"tester\", \"designer\", \"coder\"], \"patterns\": [\"frontend_development\", \"api_development\"], \"agent_count\": 5}",
+      "namespace": "default",
+      "timestamp": 1753226934765
+    },
+    {
+      "key": "analysis_2025-07-22T19-28-53-922585",
+      "value": "{\"timestamp\": \"2025-07-22T19:28:53.922585\", \"type\": \"analysis\", \"complexity\": 4, \"topic\": \"Frontend Development\"}",
+      "namespace": "default",
+      "timestamp": 1753226935586
+    },
+    {
+      "key": "task_analysis_2025-07-22T19-28-59-411849",
+      "value": "{\"timestamp\": \"2025-07-22T19:28:59.411849\", \"prompt\": \"Research the best practices for microservices architecture and create a comparison of different communication patterns\", \"complexity\": 10, \"topic\": \"Architecture Design\", \"tech\": [], \"agents\": [\"coordinator\", \"reviewer\", \"specialist\", \"architect\", \"tester\", \"coder\", \"analyst\", \"monitor\", \"optimizer\", \"researcher\", \"documenter\", \"designer\"], \"patterns\": [\"architecture_design\", \"api_development\"], \"agent_count\": 12}",
+      "namespace": "default",
+      "timestamp": 1753226940228
+    },
+    {
+      "key": "analysis_2025-07-22T19-28-59-411849",
+      "value": "{\"timestamp\": \"2025-07-22T19:28:59.411849\", \"type\": \"analysis\", \"complexity\": 10, \"topic\": \"Architecture Design\"}",
+      "namespace": "default",
+      "timestamp": 1753226941110
+    }
+  ],
+  "session/45e69bfc-cd31-4fee-b605-bfe89baf533a/current_message_tools": "[\"TodoWrite\", \"Bash\", \"Bash\", \"Bash\", \"Bash\"]"
+}

@@ -27,7 +27,12 @@ class Logger:
     def __init__(self, name: str, log_dir: Optional[str] = None, 
                  max_file_size_mb: int = 10, max_files: int = 5):
         self.name = name
-        self.log_dir = Path(log_dir) if log_dir else Path.home() / ".claude" / "logs"
+        # Default to local prompt_analyzer/logs folder
+        if log_dir:
+            self.log_dir = Path(log_dir)
+        else:
+            # Try to use local logs folder relative to this file
+            self.log_dir = Path(__file__).parent.parent / "logs"
         self.max_file_size_mb = max_file_size_mb
         self.max_files = max_files
         self.log_file: Optional[Path] = None
