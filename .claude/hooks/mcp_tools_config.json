@@ -1,0 +1,71 @@
+{
+  "prioritize_context7_exa": true,
+  "context7_triggers": {
+    "enabled": true,
+    "keywords": [
+      "library",
+      "framework",
+      "package",
+      "module",
+      "api",
+      "sdk",
+      "documentation",
+      "how to",
+      "example",
+      "tutorial",
+      "guide",
+      "reference",
+      "docs",
+      "usage",
+      "syntax",
+      "method",
+      "function",
+      "class",
+      "interface",
+      "type",
+      "import",
+      "require"
+    ],
+    "min_complexity": 1
+  },
+  "exa_triggers": {
+    "enabled": true,
+    "keywords": [
+      "search",
+      "find",
+      "latest",
+      "current",
+      "best practice",
+      "solution",
+      "alternative",
+      "compare",
+      "vs",
+      "versus",
+      "recommend",
+      "suggestion",
+      "how",
+      "what",
+      "why",
+      "when",
+      "should",
+      "could",
+      "would",
+      "error",
+      "bug",
+      "issue"
+    ],
+    "min_complexity": 1
+  },
+  "injection_rules": {
+    "always_suggest_exa": true,
+    "exa_priority": 1,
+    "context7_priority": 2,
+    "inject_at_complexity": 2,
+    "force_at_complexity": 4
+  },
+  "display_settings": {
+    "show_icons": true,
+    "priority_display": true,
+    "max_tools_shown": 10
+  }
+}

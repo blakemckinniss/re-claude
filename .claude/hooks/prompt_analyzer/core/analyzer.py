@@ -2,6 +2,7 @@
 Main prompt analyzer that orchestrates all components
 """
 
+import os
 import time
 from datetime import datetime
 from typing import Dict, Any, Optional, Tuple
@@ -75,6 +76,9 @@ class PromptAnalyzer:
             context = context_mgr.get_recent_context(use_cache=self.config.use_cache)
             context_summary = context.to_summary()
             
+            # Get working directory
+            working_dir = os.getcwd()
+            
             # Perform task analysis
             task_analysis = self.task_analyzer.analyze_prompt(prompt)
             patterns = task_analysis['patterns']
@@ -132,6 +136,9 @@ class PromptAnalyzer:
                 prompt
             )
             
+            # Extract code context if available
+            code_context = task_analysis.get('code_context')
+            
             # Format output
             formatted_output = self._format_complete_output(
                 analysis_result,
@@ -140,7 +147,8 @@ class PromptAnalyzer:
                 context_summary,
                 instructions,
                 spawn_command,
-                analysis_data.get('mcp_injection', {})
+                analysis_data.get('mcp_injection', {}),
+                code_context
             )
             
             # Log analysis
@@ -324,13 +332,14 @@ Provide analysis with MANDATORY claude-flow patterns for parallel execution."""
                                context_summary: str,
                                instructions: Any,
                                spawn_command: Any,
-                               mcp_injection: Dict[str, Any]) -> str:
+                               mcp_injection: Dict[str, Any],
+                               code_context: Optional[Dict[str, Any]] = None) -> str:
         """Format the complete output"""
         sections = []
         
         # Main analysis
         sections.append(self.formatter.format_analysis_output(
-            analysis, enhancement, patterns, context_summary
+            analysis, enhancement, patterns, context_summary, code_context
         ))
         
         # MCP injection requirements (high priority)

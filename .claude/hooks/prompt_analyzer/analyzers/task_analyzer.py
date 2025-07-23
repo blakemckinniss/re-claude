@@ -18,7 +18,6 @@ except ImportError:
     get_required_tools = None
     TASK_PATTERN_TOOLS = {}
 
-
 class TaskAnalyzer:
     """Enhanced task analyzer with claude-flow patterns"""
     
@@ -276,7 +275,6 @@ class TaskAnalyzer:
         return tool_list[:25], required_list  # Increased limit for more tools
     
     def analyze_prompt(self, prompt: str) -> Dict[str, Any]:
-        """Complete prompt analysis"""
         # Identify patterns
         patterns = self.analyze_task_patterns(prompt)
         
@@ -292,7 +290,8 @@ class TaskAnalyzer:
         # Extract technologies
         tech_involved = self._extract_technologies(prompt)
         
-        return {
+        # Basic analysis result
+        analysis = {
             "patterns": patterns,
             "complexity": complexity,
             "complexity_score": complexity_score,
@@ -302,7 +301,10 @@ class TaskAnalyzer:
             "required_mcp_tools": required_tools,
             "tech_involved": tech_involved
         }
-    
+        
+        return analysis
+
+
     def _extract_technologies(self, text: str) -> List[str]:
         """Extract technology mentions from text"""
         text_lower = text.lower()

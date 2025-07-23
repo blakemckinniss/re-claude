@@ -29,13 +29,15 @@ def main():
     """Main entry point for the hook"""
     input_data = {}  # Initialize to avoid unbound variable
     
+    # Initialize script_dir early to ensure it's always available
+    script_dir = Path(__file__).parent
+    
     # Debug log - entering main
     with open(debug_log_path, 'a') as f:
         f.write(f"[{datetime.now().isoformat()}] Entering main()\n")
     
     try:
         # Load environment variables
-        script_dir = Path(__file__).parent
         env_path = script_dir / '.env'
         if env_path.exists():
             load_dotenv(str(env_path))

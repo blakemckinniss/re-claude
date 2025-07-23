@@ -15,7 +15,8 @@ class OutputFormatter:
     def format_analysis_output(analysis: AnalysisResult, 
                              enhancement: PromptEnhancement,
                              patterns: List[TaskPattern],
-                             context_summary: str) -> str:
+                             context_summary: str,
+                             code_context: Optional[Dict[str, Any]] = None) -> str:
         """Format the complete analysis output"""
         sections = []
         
@@ -87,12 +88,34 @@ class OutputFormatter:
 👥 Recommended Agents: {analysis.swarm_agents_recommended}
 🎭 Agent Roles: {', '.join(analysis.recommended_agent_roles)}"""
         
-        # Limit tool display to prevent overwhelming output
-        tools = analysis.recommended_mcp_tools[:8]
-        if tools:
-            output += f"\n🛠️ Key MCP Tools: {', '.join(tools)}"
-            if len(analysis.recommended_mcp_tools) > 8:
-                output += f" (+{len(analysis.recommended_mcp_tools) - 8} more)"
+        # Prioritize context7, exa, tools in display
+        priority_tools = []
+        other_tools = []
+        
+        for tool in analysis.recommended_mcp_tools:
+            if "context7" in tool or "exa" in tool in tool:
+                priority_tools.append(tool)
+            else:
+                other_tools.append(tool)
+        
+        # Combine with priority tools first
+        tools = priority_tools + other_tools
+        display_tools = tools[:8]
+        
+        if display_tools:
+            output += f"\n🛠️ Key MCP Tools: {', '.join(display_tools)}"
+            if len(tools) > 8:
+                output += f" (+{len(tools) - 8} more)"
+            
+            # Add emphasis for priority tools
+            icons = []
+            if any("context7" in t for t in priority_tools):
+                icons.append("📚")
+            if any("exa" in t for t in priority_tools):
+                icons.append("🔍")
+            
+            if icons:
+                output += " " + "".join(icons)
         
         return output
     
@@ -107,9 +130,9 @@ class OutputFormatter:
         return spawn_cmd.format()
     
     @staticmethod
-    def format_action_instruction(agent_count: int, agent_roles: List[str], 
-                                 task_patterns: List[str] = None,
-                                 first_action: str = None) -> str:
+    def format_action_instruction(agent_count: int, agent_roles: List[str],
+                                 task_patterns: Optional[List[str]] = None,
+                                 first_action: Optional[str] = None) -> str:
         """Format the final action instruction that tells Claude what to do next"""
         # Determine the first action based on task patterns and context
         if not first_action:
@@ -178,18 +201,12 @@ Execute ALL of these in ONE message:
         """Format critical reminders section"""
         return """
 [CRITICAL REMINDERS]
-1. ALWAYS provide clear next steps after each action
-2. SPAWN agents liberally - use Task tool for parallel execution when possible
-3. KEEP memories updated - use mcp__claude-flow__memory_usage to store important context
-4. USE web search liberally - leverage WebSearch and WebFetch for current information
-5. BATCH operations - combine multiple tool calls in single messages for efficiency
-6. CLAUDE CODE EXECUTES - MCP tools coordinate, Claude Code does ALL actual work
-7. NO SEQUENTIAL TodoWrite calls - batch ALL todos together
-8. AGENTS MUST USE HOOKS - every agent follows the coordination protocol
-9. THINK VERY HARD - Use ultrathink for complex reasoning tasks
-10. ALL DOCUMENTATION NEEDS TO BE EPHEMERAL - unless requested otherwise, do not store documentation permanently
-11. USE THE SWARM COMMAND - always use the npx swarm spawn command to create agents
-12. ALWAYS CREATE AGENTS FOR COMPLEX TASKS - if the task is complex, spawn agents to handle it"""
+• SEARCH FIRST: Use mcp__exa__web_search_exa for current info and best practices
+• DOCS ALWAYS: Use mcp__context7__ tools for library/framework documentation
+• MEMORY USAGE: Store important context with mcp__claude-flow__memory_usage
+• WEB SEARCH: Use WebSearch, WebFetch, and mcp__exa__web_search_exa liberally
+• BATCH OPERATIONS: Combine multiple operations for efficiency
+• PROGRESS TRACKING: Update todos and provide clear status updates"""
     
     @staticmethod
     def format_log_entry(timestamp: str, level: str, message: str, 
@@ -250,11 +267,26 @@ Message: {str(error)}"""
         required_tools = mcp_injection.get('required_tools', [])
         if required_tools:
             output += "\n\n🔧 MANDATORY MCP TOOLS (must use these):"
-            # Format tools with mcp__ prefix for clarity
-            for tool in required_tools[:8]:  # Limit display
+            
+            # Prioritize context7 and exa tools
+            priority_shown = False
+            for tool in required_tools:
+                if "context7" in tool:
+                    output += f"\n  📚 {tool}    [DOCUMENTATION LOOKUP]"
+                    priority_shown = True
+                elif "exa" in tool:
+                    output += f"\n  🔍 {tool}         [WEB SEARCH]"
+                    priority_shown = True
+            
+            # Show other tools after priority ones
+            other_tools = [t for t in required_tools if "context7" not in t and "exa" not in t]
+            shown_count = 2 if priority_shown else 0
+            
+            for tool in other_tools[:max(6 - shown_count, 4)]:
                 output += f"\n  🕹️ mcp__claude-flow__{tool}"
-            if len(required_tools) > 8:
-                output += f"\n  ... (+{len(required_tools) - 8} more required tools)"
+            
+            if len(other_tools) > (6 - shown_count):
+                output += f"\n  ... (+{len(other_tools) - (6 - shown_count)} more required tools)"
         
         if mcp_injection.get('parallel_operations'):
             output += "\n\n📦 EXECUTE IN ONE MESSAGE:"

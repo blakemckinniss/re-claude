@@ -1,11 +1,10 @@
-# Claude Code Configuration with Python Hook System + ENFORCEMENT
+# Claude Code Configuration - SPARC Development Environment (Batchtools Optimized)
 
-## 🚨 CRITICAL: PARALLEL EXECUTION IS NOW ENFORCED!
+## 🚨 CRITICAL: CONCURRENT EXECUTION FOR ALL ACTIONS
 
-**⚡ ENFORCEMENT ACTIVE**: The hook system now BLOCKS sequential operations and REQUIRES parallel execution:
+**ABSOLUTE RULE**: ALL operations MUST be concurrent/parallel in a single message:
 
 ### 🔴 MANDATORY CONCURRENT PATTERNS:
-
 1. **TodoWrite**: ALWAYS batch ALL todos in ONE call (5-10+ todos minimum)
 2. **Task tool**: ALWAYS spawn ALL agents in ONE message with full instructions
 3. **File operations**: ALWAYS batch ALL reads/writes/edits in ONE message
@@ -15,429 +14,162 @@
 ### ⚡ GOLDEN RULE: "1 MESSAGE = ALL RELATED OPERATIONS"
 
 **Examples of CORRECT concurrent execution:**
-
 ```javascript
 // ✅ CORRECT: Everything in ONE message
 [Single Message]:
   - TodoWrite { todos: [10+ todos with all statuses/priorities] }
-  - Task("Agent 1 with full instructions")
-  - Task("Agent 2 with full instructions")
-  - Task("Agent 3 with full instructions")
+  - Task("Agent 1 with full instructions and hooks")
+  - Task("Agent 2 with full instructions and hooks")
+  - Task("Agent 3 with full instructions and hooks")
   - Read("file1.js")
   - Read("file2.js")
   - Write("output1.js", content)
   - Write("output2.js", content)
   - Bash("npm install")
   - Bash("npm test")
+  - Bash("npm run build")
 ```
 
-## 🔥 NEW: ENFORCEMENT SYSTEM
-
-### Enforcement Levels (in settings.json)
-- **suggest** 💡 - Gentle reminders about best practices
-- **guide** 🎯 - Strong guidance with examples
-- **enforce** ⚡ - Blocks violations (default)
-- **strict** 🔥 - Maximum enforcement with auto-rewrite
-
-### What Gets Enforced
-1. **Sequential Operations BLOCKED** - No more "do X then Y"
-2. **Batch Requirements** - TodoWrite must have 5-10+ items
-3. **Parallel Task Spawning** - All agents in ONE message
-4. **MCP-First for Complex Tasks** - Auto-injects requirements
-5. **Required MCP Tools** - Must use specific tools from claude-flow's 87 tools
-
-### MCP Tool Enforcement (87 Tools Available!)
-The system now ENFORCES usage of claude-flow's 87 MCP tools based on task context:
-
-#### How It Works:
-1. **Pattern Detection** → Identifies task type (API, frontend, backend, etc.)
-2. **Tool Mapping** → Selects REQUIRED tools from 87 available
-3. **Early Blocking** → Prevents operations if required tools not used
-4. **Validation Report** → Shows compliance at message completion
-
-#### Tool Categories & Examples:
-- **Swarm Orchestration** (9 tools): swarm_init, agent_spawn, task_orchestrate, topology_optimize
-- **Neural/Cognitive** (9 tools): neural_train, pattern_recognize, cognitive_analyze, neural_predict
-- **Memory Management** (9 tools): memory_usage, memory_search, memory_persist, memory_sync
-- **Performance** (10 tools): bottleneck_analyze, performance_report, benchmark_run, metrics_collect
-- **Workflow Automation** (9 tools): workflow_create, parallel_execute, scheduler_manage, batch_process
-- **GitHub Integration** (6 tools): github_repo_analyze, github_pr_manage, github_code_review
-- **Dynamic Agents** (6 tools): daa_agent_create, daa_capability_match, daa_consensus
-- **System/Security** (8 tools): security_scan, backup_create, diagnostic_run, log_analysis
-
-#### Example Enforcement:
-```
-🔧 MANDATORY MCP TOOLS (must use these):
-  🕹️ mcp__claude-flow__workflow_create    [REQUIRED for API development]
-  🕹️ mcp__claude-flow__bottleneck_analyze  [REQUIRED for performance tasks]
-  🕹️ mcp__claude-flow__memory_usage       [REQUIRED for all tasks]
-  🕹️ mcp__claude-flow__swarm_init         [REQUIRED for coordination]
-  ... (+8 more required tools)
+**Examples of WRONG sequential execution:**
+```javascript
+// ❌ WRONG: Multiple messages (NEVER DO THIS)
+Message 1: TodoWrite { todos: [single todo] }
+Message 2: Task("Agent 1")
+Message 3: Task("Agent 2")
+Message 4: Read("file1.js")
+Message 5: Write("output1.js")
+Message 6: Bash("npm install")
+// This is 6x slower and breaks coordination!
 ```
 
-#### Early Blocking Example:
-```
-⚠️ MCP TOOLS ENFORCEMENT - USE REQUIRED TOOLS FIRST
-═══════════════════════════════════════════════════
+### 🎯 CONCURRENT EXECUTION CHECKLIST:
 
-📋 Missing Required MCP Tools: mcp__claude-flow__swarm_init
+Before sending ANY message, ask yourself:
+- ✅ Are ALL related TodoWrite operations batched together?
+- ✅ Are ALL Task spawning operations in ONE message?
+- ✅ Are ALL file operations (Read/Write/Edit) batched together?
+- ✅ Are ALL bash commands grouped in ONE message?
+- ✅ Are ALL memory operations concurrent?
 
-🔧 These tools were identified as MANDATORY for your task.
-   Use them BEFORE proceeding with other operations!
+If ANY answer is "No", you MUST combine operations into a single message!
 
-💡 TIP: Start with MCP coordination tools, then do implementation.
-```
+## Project Overview
+This project uses the SPARC (Specification, Pseudocode, Architecture, Refinement, Completion) methodology for systematic Test-Driven Development with AI assistance through Claude-Flow orchestration.
 
-#### End-of-Message Validation:
-```
-🔍 MCP TOOL USAGE VALIDATION
-═══════════════════════════════════════════════
+**🚀 Batchtools Optimization Enabled**: This configuration includes optimized prompts and parallel processing capabilities for improved performance and efficiency.
 
-📋 Required MCP Tools: 12
-✅ Used MCP Tools: 8
-❌ Missing Required Tools: 4
+## SPARC Development Commands
 
-⚠️ MISSING REQUIRED TOOLS:
-   ❌ mcp__claude-flow__workflow_create
-   ❌ mcp__claude-flow__cognitive_analyze
-   ❌ mcp__claude-flow__pattern_recognize
-   ❌ mcp__claude-flow__memory_persist
+### Core SPARC Commands
+- `npx claude-flow sparc modes`: List all available SPARC development modes
+- `npx claude-flow sparc run <mode> "<task>"`: Execute specific SPARC mode for a task
+- `npx claude-flow sparc tdd "<feature>"`: Run complete TDD workflow using SPARC methodology
+- `npx claude-flow sparc info <mode>`: Get detailed information about a specific mode
 
-📊 COMPLIANCE SCORE: 66.7%
+### Batchtools Commands (Optimized)
+- `npx claude-flow sparc batch <modes> "<task>"`: Execute multiple SPARC modes in parallel
+- `npx claude-flow sparc pipeline "<task>"`: Execute full SPARC pipeline with parallel processing
+- `npx claude-flow sparc concurrent <mode> "<tasks-file>"`: Process multiple tasks concurrently
 
-💡 RECOMMENDATION: Review and use the missing required tools
-These tools were identified as MANDATORY for your task complexity and patterns.
-```
+### Standard Build Commands
+- `npm run build`: Build the project
+- `npm run test`: Run the test suite
+- `npm run lint`: Run linter and format checks
+- `npm run typecheck`: Run TypeScript type checking
 
-### Visual Violation Feedback
-```
-❌ CLAUDE-FLOW VIOLATION DETECTED
-═══════════════════════════════════════
+## SPARC Methodology Workflow (Batchtools Enhanced)
 
-SEQUENTIAL TodoWrite DETECTED
-
-✅ CORRECT PATTERN:
-┌─ Single Message ─────────────────┐
-│ • mcp__claude-flow__swarm_init   │
-│ • Task (Agent 1-2-3) in parallel │
-│ • TodoWrite (10+ todos)          │
-│ • Read (multiple files)          │
-└──────────────────────────────────┘
-
-❌ YOUR PATTERN: Sequential operations
-
-🔧 FIX: Batch ALL operations together!
-```
-
-## 🎯 Hook System Overview
-
-This project uses a **Python-based hook system** that automatically enhances AND ENFORCES Claude Code patterns:
-
-### Hook Types & Events
-
-1. **UserPromptSubmit** - Analyzes your prompts before execution
-   - Uses advanced prompt analyzer with optional Groq AI enhancement
-   - Automatically suggests agent count and types
-   - Provides task complexity analysis
-   - Stores conversation context for better continuity
-
-2. **PreToolUse** - Validates and prepares tool usage
-   - Auto-spawns agents based on task complexity
-   - Validates bash commands for safety
-   - Blocks sensitive file modifications
-   - Prepares memory context
-
-3. **PostToolUse** - Handles post-execution tasks
-   - Auto-formats Python files with `black`
-   - Auto-formats JS/TS files with `prettier`
-   - Tracks task completion
-   - Updates memory state
-
-4. **Stop/SubagentStop** - Session management
-   - Saves session state
-   - Generates summaries
-   - Persists memory for next session
-
-5. **Notification** - Inter-agent communication
-   - Broadcasts important events
-   - Shares memory updates
-
-## 🧠 Automatic Task Analysis & Agent Spawning
-
-The Python hook system automatically analyzes your tasks and spawns appropriate agents:
-
-### Complexity Analysis
-- **Low complexity (3-4 agents)**: Simple tasks, basic fixes, updates
-- **Medium complexity (5-7 agents)**: Standard development tasks
-- **High complexity (8-12 agents)**: Enterprise systems, distributed architectures
-
-### Auto-Agent Selection
-Based on keywords in your prompt, the system automatically spawns:
-- **coordinator** - For non-trivial tasks requiring orchestration
-- **researcher** - When research/analysis is needed
-- **coder** - For implementation tasks
-- **tester** - When testing/QA is mentioned
-- **architect** - For design and architecture tasks
-- **reviewer** - For code review and auditing
-- **optimizer** - For performance improvements
-- **documenter** - For documentation tasks
-
-### Topology Selection
-- **mesh** - Default for general tasks
-- **hierarchical** - For tasks requiring coordination
-- **ring** - For pipeline/sequential workflows
-- **star** - For centralized hub architectures
-
-## 💾 Memory & Persistence
-
-The system includes built-in memory features:
-
-### Local Memory Store
-- Stored in `.claude/hooks/memory/memory-store.json`
-- Persists across sessions
-- Tracks decisions, context, and progress
-
-### Claude Flow Memory Integration
-When claude-flow is available:
+### 1. Specification Phase (Parallel Analysis)
 ```bash
-# Store memory
-npx claude-flow@alpha memory store <key> <value> --ttl 3600
-
-# Query memory
-npx claude-flow@alpha memory query <pattern>
-
-# Session management
-npx claude-flow@alpha memory store session_initialized "$(date -Iseconds)"
+# Create detailed specifications with concurrent requirements analysis
+npx claude-flow sparc run spec-pseudocode "Define user authentication requirements" --parallel
 ```
+**Batchtools Optimization**: Simultaneously analyze multiple requirement sources, validate constraints in parallel, and generate comprehensive specifications.
 
-## 🎯 CRITICAL: Claude Code Does ALL Real Work
-
-### ✅ Claude Code ALWAYS Handles:
-- 🔧 **ALL file operations** (Read, Write, Edit, MultiEdit, Glob, Grep)
-- 💻 **ALL code generation** and programming tasks
-- 🖥️ **ALL bash commands** and system operations
-- 🏗️ **ALL actual implementation** work
-- 📝 **ALL TodoWrite** and task management
-- 🔄 **ALL git operations**
-
-### 🧠 MCP Tools ONLY Handle:
-- 🎯 **Coordination only** - Planning Claude Code's actions
-- 💾 **Memory management** - Storing decisions and context
-- 🤖 **Swarm orchestration** - Coordinating multiple Claude Code instances
-
-## 🔐 Security & Safety
-
-### Allowed Commands (from settings.json)
-- `npx claude-flow@alpha *`
-- `npm run lint`, `npm test`
-- `git` operations (status, diff, log, add, commit, push)
-- `gh` (GitHub CLI)
-- `node`, `python`
-- Formatting tools: `black`, `prettier`
-- Directory operations: `mkdir`, `ls`, `pwd`
-
-### Blocked Patterns
-- `rm -rf /`
-- Remote code execution (`curl * | bash`)
-- `sudo` commands
-- Dangerous file operations
-
-## 🚀 Auto-Formatting
-
-Files are automatically formatted after editing:
-- **Python files** (.py) - Formatted with `black`
-- **JavaScript/TypeScript** (.js, .ts) - Formatted with `prettier`
-
-This happens automatically via PostToolUse hooks - no manual action needed!
-
-## 📋 MANDATORY TODO BATCHING
-
-**TodoWrite Tool Requirements:**
-1. **ALWAYS** include 5-10+ todos in a SINGLE TodoWrite call
-2. **NEVER** call TodoWrite multiple times in sequence
-3. **INCLUDE** all priority levels (high, medium, low) in one call
-
-```javascript
-// ✅ CORRECT - All todos in ONE call
-TodoWrite { todos: [
-  { id: "1", content: "Initialize system", status: "completed", priority: "high" },
-  { id: "2", content: "Analyze requirements", status: "in_progress", priority: "high" },
-  { id: "3", content: "Design architecture", status: "pending", priority: "high" },
-  { id: "4", content: "Implement core", status: "pending", priority: "high" },
-  { id: "5", content: "Build features", status: "pending", priority: "medium" },
-  { id: "6", content: "Write tests", status: "pending", priority: "medium" },
-  { id: "7", content: "Add monitoring", status: "pending", priority: "medium" },
-  { id: "8", content: "Documentation", status: "pending", priority: "low" }
-]}
+### 2. Pseudocode Phase (Concurrent Logic Design)
+```bash
+# Develop algorithmic logic with parallel pattern analysis
+npx claude-flow sparc run spec-pseudocode "Create authentication flow pseudocode" --batch-optimize
 ```
+**Batchtools Optimization**: Process multiple algorithm patterns concurrently, validate logic flows in parallel, and optimize data structures simultaneously.
 
-## 🤖 Using MCP Tools for Coordination
-
-When claude-flow MCP server is installed:
-
-### Initialize Swarm
-```javascript
-mcp__claude-flow__swarm_init { 
-  topology: "mesh",
-  maxAgents: 6,
-  strategy: "adaptive" 
-}
+### 3. Architecture Phase (Parallel Component Design)
+```bash
+# Design system architecture with concurrent component analysis
+npx claude-flow sparc run architect "Design authentication service architecture" --parallel
 ```
+**Batchtools Optimization**: Generate multiple architectural alternatives simultaneously, validate integration points in parallel, and create comprehensive documentation concurrently.
 
-### Spawn Agents
-```javascript
-mcp__claude-flow__agent_spawn { 
-  type: "researcher",
-  name: "API Research",
-  capabilities: ["api", "documentation"]
-}
+### 4. Refinement Phase (Parallel TDD Implementation)
+```bash
+# Execute Test-Driven Development with parallel test generation
+npx claude-flow sparc tdd "implement user authentication system" --batch-tdd
 ```
+**Batchtools Optimization**: Generate multiple test scenarios simultaneously, implement and validate code in parallel, and optimize performance concurrently.
 
-### Memory Operations
-```javascript
-mcp__claude-flow__memory_usage {
-  action: "store",
-  key: "project/decision",
-  value: "Use REST API pattern"
-}
+### 5. Completion Phase (Concurrent Integration)
+```bash
+# Integration with parallel validation and documentation
+npx claude-flow sparc run integration "integrate authentication with user management" --parallel
 ```
+**Batchtools Optimization**: Run integration tests in parallel, generate documentation concurrently, and validate requirements simultaneously.
 
-## 🎨 Prompt Enhancement
+## Batchtools Integration Features
 
-The UserPromptSubmit hook automatically enhances your prompts with:
+### Parallel Processing Capabilities
+- **Concurrent File Operations**: Read, analyze, and modify multiple files simultaneously
+- **Parallel Code Analysis**: Analyze dependencies, patterns, and architecture concurrently
+- **Batch Test Generation**: Create comprehensive test suites in parallel
+- **Concurrent Documentation**: Generate multiple documentation formats simultaneously
 
-1. **Task Analysis** - Complexity scoring and pattern detection
-2. **Context Awareness** - Previous conversation history
-3. **Agent Recommendations** - Optimal team composition
-4. **MCP Tool Suggestions** - Relevant coordination tools
-5. **Execution Instructions** - Step-by-step guidance
-6. **Clear Action Items** - Specific next steps at the end
+### Performance Optimizations
+- **Smart Batching**: Group related operations for optimal performance
+- **Pipeline Processing**: Chain dependent operations with parallel stages
+- **Resource Management**: Efficient utilization of system resources
+- **Error Resilience**: Robust error handling with parallel recovery
 
-### Example Enhanced Output
-```
-📊 ENHANCED PROMPT ANALYSIS
-════════════════════════════════════════
-🎯 Task Type: Full-Stack Development
-💡 Complexity: High (Score: 8/10)
-🔧 Technologies: React, Node.js, PostgreSQL
-📝 Analysis: Complex multi-tier application
+## Performance Benchmarks
 
-👥 RECOMMENDED SWARM (8 agents)
-• architect - System design
-• coder (x2) - Frontend/Backend
-• analyst - Database design
-• tester - Quality assurance
-• coordinator - Project management
+### Batchtools Performance Improvements
+- **File Operations**: Up to 300% faster with parallel processing
+- **Code Analysis**: 250% improvement with concurrent pattern recognition
+- **Test Generation**: 400% faster with parallel test creation
+- **Documentation**: 200% improvement with concurrent content generation
+- **Memory Operations**: 180% faster with batched read/write operations
 
-🛠️ SUGGESTED MCP TOOLS
-• swarm_init - Initialize coordination
-• task_orchestrate - Manage workflow
-• memory_usage - Track decisions
+## Code Style and Best Practices (Batchtools Enhanced)
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 NEXT ACTION (EXECUTE NOW):
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+### SPARC Development Principles with Batchtools
+- **Modular Design**: Keep files under 500 lines, optimize with parallel analysis
+- **Environment Safety**: Never hardcode secrets, validate with concurrent checks
+- **Test-First**: Always write tests before implementation using parallel generation
+- **Clean Architecture**: Separate concerns with concurrent validation
+- **Parallel Documentation**: Maintain clear, up-to-date documentation with concurrent updates
 
-Execute ALL of these in ONE message:
-1️⃣ Initialize swarm with mcp__claude-flow__swarm_init (if complexity >= 4)
-2️⃣ SPAWN 8 agents (architect, coder, analyst) using parallel Task calls
-3️⃣ CREATE TodoWrite with 8-12 todos (mixed statuses/priorities)
-4️⃣ READ any relevant files mentioned in the requirements
-5️⃣ THEN: design the service architecture and data models
+### Batchtools Best Practices
+- **Parallel Operations**: Use batchtools for independent tasks
+- **Concurrent Validation**: Validate multiple aspects simultaneously
+- **Batch Processing**: Group similar operations for efficiency
+- **Pipeline Optimization**: Chain operations with parallel stages
+- **Resource Management**: Monitor and optimize resource usage
 
-⚡ Remember: ALL operations above in ONE message for maximum efficiency!
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
+## Important Notes (Enhanced)
 
-### Pattern-Specific First Actions
-The system provides context-aware first actions based on detected patterns:
+- Always run tests before committing with parallel execution (`npm run test --parallel`)
+- Use SPARC memory system with concurrent operations to maintain context across sessions
+- Follow the Red-Green-Refactor cycle with parallel test generation during TDD phases
+- Document architectural decisions with concurrent validation in memory
+- Regular security reviews with parallel analysis for authentication or data handling code
+- Claude Code slash commands provide quick access to batchtools-optimized SPARC modes
+- Monitor system resources during parallel operations for optimal performance
 
-- **API Development**: "design the API structure and define endpoints"
-- **Frontend Development**: "create the component architecture and UI flow"
-- **Backend Development**: "design the service architecture and data models"
-- **Database Operations**: "analyze the schema requirements and relationships"
-- **Testing Automation**: "identify test scenarios and coverage requirements"
-- **Performance Optimization**: "profile the current system and identify bottlenecks"
-- **Security Audit**: "scan for vulnerabilities and review security patterns"
-- **Debugging**: "reproduce the issue and gather diagnostic information"
-- **Deployment**: "review the deployment requirements and infrastructure"
-- **Refactoring**: "analyze the current code structure and identify improvements"
-- **Documentation**: "outline the documentation structure and key topics"
-- **Architecture Design**: "define system components and their interactions"
+For more information about SPARC methodology and batchtools optimization, see: 
+- SPARC Guide: https://github.com/ruvnet/claude-code-flow/docs/sparc.md
+- Batchtools Documentation: https://github.com/ruvnet/claude-code-flow/docs/batchtools.md
 
-## 📊 Visual Progress Tracking
-
-The system provides visual task tracking:
-
-```
-📊 Progress Overview
-   ├── Total Tasks: 10
-   ├── ✅ Completed: 3 (30%)
-   ├── 🔄 In Progress: 2 (20%)
-   ├── ⭕ Todo: 5 (50%)
-   └── ❌ Blocked: 0 (0%)
-
-🔄 In progress (2)
-   ├── 🟡 002: Implement auth system ↳ 2 deps ▶
-   └── 🔴 003: Design database schema [HIGH] ▶
-
-Priority indicators: 🔴 HIGH/CRITICAL, 🟡 MEDIUM, 🟢 LOW
-```
-
-## 🔧 Configuration Files
-
-### `.claude/settings.json`
-- Hook configuration (PreToolUse, PostToolUse, etc.)
-- Environment variables
-- Security permissions
-- MCP server settings
-- **NEW**: `"claude_flow_enforcement": "enforce"` - Set enforcement level
-
-### `.claude/hooks/`
-- `claude_hook_router.py` - Main hook router with ENFORCEMENT
-- `prompt_analyzer_main.py` - Prompt analysis with MCP injection
-- `prompt_analyzer/` - Modular analysis components
-- `memory/` - Local memory store with TTL support
-- `memory/memory-store.json` - Persistent session data
-
-## ⚡ Best Practices (NOW ENFORCED!)
-
-1. **Batch Everything** - REQUIRED: Single messages for operations
-2. **Let Hooks Work** - Enforcement happens automatically
-3. **Trust Analysis** - Complexity triggers MCP requirements
-4. **Use Memory** - Session tracking enforces patterns
-5. **Parallel First** - Sequential patterns get BLOCKED
-
-### Auto-Rewrite Example
-If you say: "First do X, then do Y, and after that do Z"
-
-The system rewrites to:
-```
-[🔄 REWRITTEN FOR PARALLEL EXECUTION]
-Execute ALL operations concurrently:
-• Initialize swarm with appropriate topology
-• Spawn ALL required agents in parallel
-• Create complete todo list (5-10+ items)
-• Read ALL necessary files simultaneously
-• Store decisions in memory for persistence
-```
-
-## 🚨 Important Notes
-
-- **ENFORCEMENT IS ACTIVE** - Violations will be BLOCKED
-- The Python hooks run automatically - no manual intervention needed
-- Memory persists in `.claude/hooks/memory/memory-store.json`
-- Auto-formatting requires `black` (Python) and `prettier` (JS/TS) installed
-- Claude Flow integration enforced for complex tasks (score >= 4)
-- All actual work is done by Claude Code - MCP tools coordinate
-- Sequential patterns trigger auto-rewrite in enforce/strict modes
-
-### Enforcement Violations Result In:
-- ❌ **BLOCKED** operations with visual guidance
-- 🔄 **AUTO-REWRITE** of sequential patterns
-- 🚀 **FORCED MCP** initialization for complex tasks
-- 📦 **BATCHING** requirements (5-10+ todos, parallel tasks)
-
----
-
-Remember: **The hooks now ENFORCE claude-flow patterns automatically!**
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
+NEVER create md or test files in root directories or system folders.

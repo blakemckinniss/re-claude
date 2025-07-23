@@ -4,7 +4,7 @@ Groq API client integration
 
 import os
 import json
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Union
 from dataclasses import dataclass
 
 # Try to import Groq
@@ -45,8 +45,8 @@ class GroqClient:
                 max_tokens=int(os.getenv('GROQ_MAX_TOKENS', '1024'))
             )
         
-        self.client = None
-        if GROQ_AVAILABLE:
+        self.client: Optional[Any] = None
+        if GROQ_AVAILABLE and Groq is not None:
             self.client = Groq(api_key=self.config.api_key)
     
     @property
@@ -57,7 +57,7 @@ class GroqClient:
     def analyze_prompt(self, prompt: str, system_prompt: str, 
                       response_format: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Analyze a prompt using Groq"""
-        if not self.is_available:
+        if not self.is_available or self.client is None:
             return self._fallback_analysis(prompt)
         
         try:
@@ -93,7 +93,7 @@ class GroqClient:
     
     def summarize_text(self, text: str, max_length: int = 200) -> str:
         """Summarize text using Groq"""
-        if not self.is_available:
+        if not self.is_available or self.client is None:
             return text[:max_length] + "..." if len(text) > max_length else text
         
         prompt = f"""Summarize this text in under {max_length} characters. 
