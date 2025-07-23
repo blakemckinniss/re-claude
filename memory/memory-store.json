@@ -1,0 +1,16 @@
+{
+  "default": [
+    {
+      "key": "task_analysis_2025-07-22T23-04-41-645786",
+      "value": "{\"timestamp\": \"2025-07-22T23:04:41.645786\", \"prompt\": \"audit /home/devcontainers/workspace/re-claude/.claude/hooks and provide recommendations\", \"complexity\": 7, \"topic\": \"Security Audit\", \"tech\": [], \"agents\": [\"coordinator\", \"specialist\", \"tester\", \"reviewer\", \"analyst\", \"monitor\"], \"patterns\": [\"security_audit\"], \"agent_count\": 6}",
+      "namespace": "default",
+      "timestamp": 1753239882463
+    },
+    {
+      "key": "analysis_2025-07-22T23-04-41-645786",
+      "value": "{\"timestamp\": \"2025-07-22T23:04:41.645786\", \"type\": \"analysis\", \"complexity\": 7, \"topic\": \"Security Audit\"}",
+      "namespace": "default",
+      "timestamp": 1753239883298
+    }
+  ]
+}
